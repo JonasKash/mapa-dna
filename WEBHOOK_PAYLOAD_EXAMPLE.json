@@ -1,0 +1,21 @@
+{
+  "utm_source": "facebook",
+  "utm_medium": "social",
+  "utm_campaign": "matrix_dna_launch",
+  "utm_term": "financas_pessoais",
+  "utm_content": "video_ad_001",
+  "user_id": "user_1703123456789_abc123def",
+  "session_id": "session_1703123456789_xyz789ghi",
+  "name": "João Silva",
+  "birth_date": "1990-05-15",
+  "question1": "Investir em ações",
+  "question2": "Renda fixa",
+  "money": 1500,
+  "monthly_potential": 3500,
+  "achievements": ["Jornada Iniciada", "Primeira Resposta", "Dados Coletados"],
+  "timestamp": "2023-12-21T10:30:45.123Z",
+  "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+  "referrer": "https://www.facebook.com/",
+  "current_step": 6,
+  "event_type": "payment_click"
+}

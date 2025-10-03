@@ -34,12 +34,15 @@ const Step1Welcome = () => {
             </p>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-orbitron font-bold text-primary matrix-glow leading-tight">
-            💥 DESPERTE SEU<br />PODER FINANCEIRO
+          <h1 className="text-2xl md:text-3xl font-orbitron font-bold text-primary matrix-glow leading-tight">
+            Desperte<br />
+            sua<br />
+            Vida<br />
+            financeira
           </h1>
 
-          <p className="text-xl md:text-2xl text-secondary font-orbitron">
-            com a Numerologia Matrix
+          <p className="text-lg md:text-xl text-secondary font-orbitron">
+            Com a numerologia do dinheiro
           </p>
 
           <div className="bg-card/50 backdrop-blur-sm border-2 border-primary rounded-lg p-6 matrix-border animate-pulse-glow">

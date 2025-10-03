@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 import NotificationBadge from '@/components/NotificationBadge';
 
 const options = [
-  { id: 'A', text: 'Multiplicar minha renda de forma constante', points: 50 },
-  { id: 'B', text: 'Descobrir oportunidades escondidas', points: 40 },
-  { id: 'C', text: 'Segurança Financeira para família', points: 35 },
-  { id: 'D', text: 'Liberdade para viver meus sonhos', points: 30 },
+  { id: 'A', text: 'Dobrar Renda', money: 500 },
+  { id: 'B', text: 'Oportunidades', money: 400 },
+  { id: 'C', text: 'Quitar Dívidas', money: 350 },
+  { id: 'D', text: 'Todas acima', money: 1250 },
 ];
 
 const Step2Question1 = () => {
-  const { updateData, addPoints, addAchievement, nextStep } = useFunnel();
+  const { updateData, addMoney, addAchievement, nextStep } = useFunnel();
   const { playCoins } = useSound();
   const [selected, setSelected] = useState<string | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -20,10 +20,10 @@ const Step2Question1 = () => {
   const handleSelect = (option: typeof options[0]) => {
     setSelected(option.id);
     updateData({ question1: option.text });
-    addPoints(option.points);
+    addMoney(option.money);
     playCoins();
     
-    if (option.points >= 40) {
+    if (option.money >= 400) {
       addAchievement('Visionário Financeiro');
       setShowNotification(true);
     }
@@ -41,8 +41,15 @@ const Step2Question1 = () => {
             QUESTÃO 1/2
           </span>
           
-          <h2 className="text-3xl md:text-5xl font-orbitron font-bold text-primary matrix-glow">
-            Qual o seu maior desejo?
+          <h2 className="text-2xl md:text-3xl font-orbitron font-bold text-primary matrix-glow leading-tight">
+            Desperte<br />
+            sua<br />
+            Vida<br />
+            financeira<br />
+            <br />
+            <span className="text-lg md:text-xl text-secondary">
+              Com a numerologia do dinheiro
+            </span>
           </h2>
           
           <p className="text-lg text-muted-foreground">
@@ -70,13 +77,13 @@ const Step2Question1 = () => {
                     {option.id}
                   </span>
                   <span className="px-3 py-1 bg-secondary/20 border border-secondary rounded-full text-xs font-orbitron text-secondary">
-                    +{option.points} pts
+                    +R$ {option.money}
                   </span>
                 </div>
                 
                 {/* Texto principal com área dedicada */}
                 <div className="flex-1 w-full mb-3">
-                  <p className="text-sm md:text-base text-foreground font-medium leading-relaxed break-words hyphens-auto max-w-full">
+                  <p className="text-xs md:text-sm text-foreground font-medium leading-tight break-words hyphens-auto max-w-full text-center">
                     {option.text}
                   </p>
                 </div>
@@ -85,7 +92,7 @@ const Step2Question1 = () => {
                 {selected === option.id && (
                   <div className="w-full pt-3 border-t border-primary/30 animate-slide-down">
                     <p className="text-xs text-primary matrix-glow">
-                      ✓ +{option.points} pontos adicionados
+                      ✓ +R$ {option.money} adicionados
                     </p>
                   </div>
                 )}

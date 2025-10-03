@@ -2,10 +2,11 @@ import { useFunnel } from '@/contexts/FunnelContext';
 import { Button } from '@/components/ui/button';
 
 const Step7Upsell = () => {
-  const { data } = useFunnel();
+  const { data, calculateMonthlyPotential } = useFunnel();
   const whatsappMentoriaLink = 'https://wa.me/5534997101300?text=Ol%C3%A1%20tenho%20interesse%20na%20mentoria%20personalizada!';
 
-  const isEligible = data.points >= 200;
+  const isEligible = data.money >= 2000;
+  const monthlyPotential = calculateMonthlyPotential();
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -26,7 +27,7 @@ const Step7Upsell = () => {
               </h2>
               
               <p className="text-lg text-muted-foreground">
-                Você atingiu {data.points} pontos e desbloqueou uma oferta única
+                Você atingiu {data.money} pontos e desbloqueou uma oferta única
               </p>
             </div>
 
@@ -64,7 +65,7 @@ const Step7Upsell = () => {
                     <span className="text-2xl line-through text-muted-foreground">R$ 497</span>
                     <span className="text-5xl font-orbitron text-primary matrix-glow">R$ 150</span>
                   </div>
-                  <p className="text-xs text-accent">🔥 Desconto exclusivo para membros nível {data.points}+</p>
+                  <p className="text-xs text-accent">🔥 Desconto exclusivo para membros nível {data.money}+</p>
                 </div>
 
                 <a href={whatsappMentoriaLink} target="_blank" rel="noopener noreferrer" className="block">
@@ -72,7 +73,7 @@ const Step7Upsell = () => {
                     size="lg"
                     className="w-full text-xl font-orbitron bg-primary hover:bg-primary/80 text-primary-foreground border-2 border-primary shadow-lg hover:shadow-xl transition-all h-16"
                   >
-                    🚀 Quero a Mentoria Exclusiva
+                    🚀 Quero a Mentoria
                   </Button>
                 </a>
 
@@ -88,7 +89,7 @@ const Step7Upsell = () => {
               </p>
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center">
-                  <p className="text-2xl font-orbitron text-primary">{data.points}</p>
+                  <p className="text-2xl font-orbitron text-primary">{data.money}</p>
                   <p className="text-xs text-muted-foreground">Pontos</p>
                 </div>
                 <div className="text-center">
@@ -108,7 +109,7 @@ const Step7Upsell = () => {
               Obrigado por completar sua jornada!
             </h2>
             <p className="text-lg text-muted-foreground">
-              Você acumulou {data.points} pontos e desbloqueou {data.achievements.length} conquistas.
+              Você acumulou {data.money} pontos e desbloqueou {data.achievements.length} conquistas.
             </p>
             <div className="bg-card border-2 border-primary rounded-lg p-6">
               <p className="text-sm text-foreground">

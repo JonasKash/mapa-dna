@@ -19,7 +19,7 @@ const ProgressBar = () => {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-orbitron text-secondary">
-              💰 {data.points} Pontos
+              💰 R$ {data.money}
             </span>
           </div>
         </div>

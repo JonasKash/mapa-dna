@@ -6,22 +6,39 @@ import { Input } from '@/components/ui/input';
 import NotificationBadge from '@/components/NotificationBadge';
 
 const Step4DataCollection = () => {
-  const { data, updateData, addPoints, addAchievement, nextStep } = useFunnel();
+  const { data, updateData, addMoney, addAchievement, nextStep, sendWebhookWithData } = useFunnel();
   const { playAchievement } = useSound();
   const [name, setName] = useState(data.name);
   const [birthDate, setBirthDate] = useState(data.birthDate);
   const [showNotification, setShowNotification] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Limitar a 4 dígitos no ano (formato YYYY-MM-DD)
+    if (value.length <= 10) { // 10 caracteres para YYYY-MM-DD
+      setBirthDate(value);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name || !birthDate) return;
 
+    // Update data first
     updateData({ name, birthDate });
-    addPoints(100);
+    addMoney(1000);
     addAchievement('DNA Financeiro Desbloqueado');
     playAchievement();
     setShowNotification(true);
+
+    // Send webhook with the current form data immediately
+    try {
+      await sendWebhookWithData('data_collected', { name, birthDate });
+      console.log('Webhook sent successfully for data collection with name:', name, 'and birthDate:', birthDate);
+    } catch (error) {
+      console.error('Error sending webhook for data collection:', error);
+    }
 
     setTimeout(() => {
       nextStep();
@@ -69,8 +86,10 @@ const Step4DataCollection = () => {
             <Input
               type="date"
               value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
+              onChange={handleBirthDateChange}
               className="bg-card border-2 border-primary/50 focus:border-primary text-foreground font-mono h-14 text-lg"
+              max="2024-12-31"
+              min="1900-01-01"
               required
             />
           </div>
@@ -81,7 +100,7 @@ const Step4DataCollection = () => {
               <div>
                 <p className="text-sm font-orbitron text-secondary">Bônus de Desbloqueio</p>
                 <p className="text-xs text-muted-foreground">
-                  +100 pontos ao completar esta etapa
+                  +R$ 1.000 ao completar esta etapa
                 </p>
               </div>
             </div>

@@ -47,8 +47,10 @@ const FunnelContent = () => {
 const Index = () => {
   return (
     <FunnelProvider>
-      <div className="min-h-screen bg-background">
-        <FunnelContent />
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="mobile-container">
+          <FunnelContent />
+        </div>
       </div>
     </FunnelProvider>
   );

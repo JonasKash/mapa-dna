@@ -5,22 +5,28 @@ import { Button } from '@/components/ui/button';
 import NotificationBadge from '@/components/NotificationBadge';
 
 const options = [
-  { id: 'A', text: 'Sim! Quero um caminho claro e personalizado', points: 60 },
-  { id: 'B', text: 'Com certeza, preciso de direção', points: 45 },
-  { id: 'C', text: 'Talvez, mas quero entender melhor', points: 30 },
-  { id: 'D', text: 'Estou curioso para saber mais', points: 25 },
+  { id: 'A', text: 'Quero o guia\nAgora', money: 600 },
+  { id: 'B', text: 'Continuar\nPobre', money: 0 },
 ];
 
 const Step3Question2 = () => {
-  const { data, updateData, addPoints, addAchievement, nextStep } = useFunnel();
+  const { data, updateData, addMoney, addAchievement, nextStep } = useFunnel();
   const { playAchievement } = useSound();
   const [selected, setSelected] = useState<string | null>(null);
   const [showNotification, setShowNotification] = useState(false);
+  const [showLockedMessage, setShowLockedMessage] = useState(false);
 
   const handleSelect = (option: typeof options[0]) => {
     setSelected(option.id);
     updateData({ question2: option.text });
-    addPoints(option.points);
+    
+    if (option.id === 'B') {
+      // Mostrar mensagem de sistema travado
+      setShowLockedMessage(true);
+      return;
+    }
+    
+    addMoney(option.money);
     playAchievement();
     
     addAchievement('Explorador da Riqueza');
@@ -40,20 +46,20 @@ const Step3Question2 = () => {
               QUESTÃO 2/2
             </span>
             <span className="inline-block px-4 py-2 bg-secondary/20 border border-secondary rounded-lg text-secondary text-xs font-orbitron cyber-glow">
-              {data.points} PONTOS
+              R$ {data.money}
             </span>
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-orbitron font-bold text-primary matrix-glow leading-tight">
-            Descubra Seu Mapa<br />de Oportunidades
+          <h2 className="text-2xl md:text-3xl font-orbitron font-bold text-primary matrix-glow leading-tight">
+            Mapa do DNA Financeiro
           </h2>
           
           <p className="text-lg text-muted-foreground">
-            Você gostaria de um guia personalizado para suas oportunidades financeiras?
+            Receba um guia exclusivo de como usar sua numerologia para fazer dinheiro
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {options.map((option, index) => (
             <Button
               key={option.id}
@@ -71,18 +77,18 @@ const Step3Question2 = () => {
                   {option.id}
                 </span>
                 <span className="px-3 py-1 bg-secondary/20 border border-secondary rounded-full text-xs font-orbitron text-secondary">
-                  +{option.points} pts
+                  +R$ {option.money}
                 </span>
               </div>
               
-              <p className="text-base text-foreground font-medium">
+              <p className="text-xs md:text-sm text-foreground font-medium leading-tight break-words hyphens-auto max-w-full text-center whitespace-pre-line">
                 {option.text}
               </p>
 
               {selected === option.id && (
                 <div className="w-full pt-2 border-t border-primary/30 animate-slide-down">
                   <p className="text-xs text-primary matrix-glow">
-                    ✓ +{option.points} pontos adicionados
+                    ✓ +R$ {option.money} adicionados
                   </p>
                 </div>
               )}
@@ -102,6 +108,21 @@ const Step3Question2 = () => {
         show={showNotification}
         onClose={() => setShowNotification(false)}
       />
+
+      {/* Mensagem de Sistema Travado */}
+      {showLockedMessage && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-card border-2 border-destructive rounded-lg p-8 text-center max-w-sm mx-4 animate-fade-in-up">
+            <div className="text-6xl mb-4">🔒</div>
+            <h3 className="text-2xl font-orbitron text-destructive matrix-glow mb-4">
+              Sistema Travado
+            </h3>
+            <p className="text-muted-foreground text-sm">
+              Acesso negado. Opção bloqueada.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

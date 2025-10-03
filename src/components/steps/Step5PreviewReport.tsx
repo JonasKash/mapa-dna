@@ -3,8 +3,23 @@ import { useFunnel } from '@/contexts/FunnelContext';
 import { Button } from '@/components/ui/button';
 
 const Step5PreviewReport = () => {
-  const { data, nextStep } = useFunnel();
+  const { data, nextStep, calculateMonthlyPotential, generateOracle } = useFunnel();
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
+
+  // Função para dividir o texto da revelação em seções
+  const parseRevelationText = (text: string) => {
+    const sentences = text.split('. ').filter(s => s.trim());
+    
+    return {
+      abertura: sentences[0] + '.',
+      nucleo: sentences.slice(1, 3).join('. ') + '.',
+      talentos: sentences.slice(3, 6).join('. ') + '.',
+      caminho: sentences.slice(6, 8).join('. ') + '.',
+      potencial: sentences.slice(8, 9).join('. ') + '.',
+      obstaculo: sentences.slice(9, 10).join('. ') + '.',
+      encerramento: sentences.slice(-1)[0]
+    };
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -13,6 +28,13 @@ const Step5PreviewReport = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Gerar revelação do oráculo quando o componente for montado
+  useEffect(() => {
+    if (data.name && data.birthDate && !data.oracleData && !data.isGeneratingOracle) {
+      generateOracle();
+    }
+  }, [data.name, data.birthDate, data.oracleData, data.isGeneratingOracle, generateOracle]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -28,6 +50,7 @@ const Step5PreviewReport = () => {
   };
 
   const lifePath = calculateLifePath(data.birthDate);
+  const monthlyPotential = calculateMonthlyPotential();
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 py-12">
@@ -45,138 +68,152 @@ const Step5PreviewReport = () => {
             </div>
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-orbitron font-bold text-primary matrix-glow leading-tight">
-            🔥 SISTEMA DECODIFICADO<br />ACESSO LIBERADO! 🔥
+          <h2 className="text-2xl md:text-3xl font-orbitron font-bold text-primary matrix-glow leading-tight">
+            🔑 DECODIFICADO<br /> 
           </h2>
           
           <p className="text-xl text-primary font-orbitron matrix-glow">
-            DESCUBRA SEU DNA FINANCEIRO:<br />HACKER DE OPORTUNIDADES!
+            DESCUBRA SEU DNA FINANCEIRO:<br />
           </p>
           
           <p className="text-base text-foreground">
-            Você está prestes a desbloquear o seu verdadeiro potencial financeiro!<br />
-            Prepare-se para a transformação!
+            Você está a um passo de desbloquear seu verdadeiro POTENCIAL financeiro!
           </p>
         </div>
 
-        <div className="bg-card border-2 border-primary rounded-lg p-6 space-y-6 matrix-border">
-          <div className="text-center">
-            <h3 className="text-2xl font-orbitron text-primary matrix-glow mb-4">
-              🔮 ANÁLISE COMPLETA - SEU MAPA FINANCEIRO ENERGÉTICO!
-            </h3>
-            <p className="text-lg text-foreground">
-              {data.name}, seu potencial foi identificado e agora vamos detoná-lo!
-            </p>
-          </div>
-
-          <div className="space-y-4 bg-muted/30 border border-primary/50 rounded-lg p-5">
-            <h4 className="text-xl font-orbitron text-primary">🎯 SEU DNA FINANCEIRO DECIFRADO:</h4>
-            
-            <div className="grid gap-3">
-              <div className="flex justify-between items-center pb-2 border-b border-primary/30">
-                <span className="text-sm text-muted-foreground">Destino Financeiro:</span>
-                <span className="text-3xl font-orbitron text-primary matrix-glow">{lifePath}</span>
-              </div>
-              <p className="text-sm text-foreground">Poder criativo inato!</p>
-
-              <div className="flex justify-between items-center pb-2 border-b border-primary/30">
-                <span className="text-sm text-muted-foreground">Código de Abundância:</span>
-                <span className="text-3xl font-orbitron text-primary matrix-glow">10</span>
-              </div>
-              <p className="text-sm text-foreground">Magnetismo irresistível!</p>
-
-              <div className="flex justify-between items-center pb-2 border-b border-primary/30">
-                <span className="text-sm text-muted-foreground">Potencial Mensal:</span>
-                <span className="text-2xl font-orbitron text-primary matrix-glow">R$ 2.200</span>
-              </div>
-              <p className="text-sm text-foreground font-bold">Mas seu verdadeiro potencial é MUITO MAIS!</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="text-xl font-orbitron text-primary">🏆 ARQUÉTIPO DE RIQUEZA: O VISIONÁRIO</h4>
-            <p className="text-sm text-foreground">
-              Você não é qualquer um, {data.name}! Você é um Visionário! Sua energia natural faz a riqueza fluir através de sua inovação e visão estratégica. Você tem a capacidade de ver oportunidades onde outros veem apenas obstáculos!
-            </p>
-          </div>
-
-          <div className="space-y-3 bg-muted/30 border border-primary/50 rounded-lg p-5">
-            <h4 className="text-lg font-orbitron text-primary">💎 TALENTOS MONETÁRIOS JÁ ATIVOS EM VOCÊ:</h4>
-            <div className="space-y-2">
-              <div className="flex items-start gap-3">
-                <span className="text-primary text-xl">✓</span>
-                <p className="text-sm text-foreground">
-                  Identificação de oportunidades antes da concorrência!
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-primary text-xl">✓</span>
-                <p className="text-sm text-foreground">
-                  Liderança e inovação são a sua praia.
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="text-primary text-xl">✓</span>
-                <p className="text-sm text-foreground">
-                  Intuição aguçada para tendências de mercado.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <h4 className="text-lg font-orbitron text-primary">⚡ SUA ESTRATÉGIA DOURADA PERSONALIZADA!</h4>
-            <p className="text-sm text-foreground">
-              Com seu Destino {lifePath}, você deve focar em estratégias de alta conversão e otimização máxima do seu tempo. Vamos acelerar sua jornada!
-            </p>
-          </div>
-
-          <div className="space-y-3 bg-primary/10 border border-primary rounded-lg p-5">
-            <h4 className="text-lg font-orbitron text-primary">🚀 PRÓXIMO PASSO CALCULADO PARA VOCÊ:</h4>
-            <p className="text-sm text-foreground font-medium">
-              Nos próximos 7 dias, comece a estruturar sua saída do CLT e crie sua primeira fonte de renda digital. O tempo de mudar é AGORA!
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <h4 className="text-lg font-orbitron text-primary">💰 PREVISÕES DE GANHOS, BASEADAS NO SEU DNA:</h4>
-            <div className="grid gap-2 text-sm text-foreground">
-              <div className="flex justify-between">
-                <span>30 dias:</span>
-                <span className="font-orbitron text-primary">R$ 1.343</span>
-              </div>
-              <div className="flex justify-between">
-                <span>90 dias:</span>
-                <span className="font-orbitron text-primary">R$ 3.741</span>
-              </div>
-              <div className="flex justify-between">
-                <span>180 dias:</span>
-                <span className="font-orbitron text-primary">R$ 6.294</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-destructive/20 border-2 border-destructive rounded-lg p-4">
-            <h4 className="text-lg font-orbitron text-destructive mb-2">🔥 BLOQUEIOS ENERGÉTICOS DETECTADOS!</h4>
-            <p className="text-sm text-foreground">
-              Você está com um teto mental baixo, e seus números revelam que você pode triplicar seu potencial. É hora de quebrar essas barreiras e fazer acontecer!
-            </p>
-          </div>
-
-          <div className="bg-muted/30 backdrop-blur-sm border-2 border-primary/50 rounded-lg p-5 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-pulse" />
-            <div className="relative z-10 space-y-3">
-              <p className="text-base text-center font-orbitron text-primary">
-                📈 ESTA É APENAS UMA PRÉVIA DO SEU POTENCIAL...
+        {data.isGeneratingOracle ? (
+          <div className="bg-card border-2 border-primary rounded-lg p-6 space-y-6 matrix-border">
+            <div className="text-center space-y-6 py-12">
+              <div className="animate-spin mx-auto w-16 h-16 border-4 border-primary border-t-transparent rounded-full"></div>
+              <h3 className="text-2xl font-orbitron text-primary matrix-glow">
+                Pílula Agindo...
+              </h3>
+              <p className="text-lg text-foreground">
+                Sua realidade financeira já está sendo decifrada
               </p>
-              <p className="text-sm text-center text-foreground font-medium">
-                NO RELATÓRIO COMPLETO POR APENAS R$ 10, você vai descobrir:
+              <div className="flex justify-center space-x-1">
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+          </div>
+        ) : data.oracleData ? (
+          <>
+            <div className="bg-card border-2 border-primary rounded-lg p-6 space-y-6 matrix-border">
+              <div className="text-center">
+                <h3 className="text-2xl font-orbitron text-primary matrix-glow mb-4">
+                  🔮 REVELAÇÃO DO ORÁCULO DA PROSPERIDADE
+                </h3>
+                <p className="text-lg text-foreground">
+                  {data.name}, sua numerologia foi decifrada!
+                </p>
+              </div>
+
+              {(() => {
+                const parsedText = parseRevelationText(data.oracleData.revelacao);
+                return (
+                  <div className="space-y-6">
+                    <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
+                      <h4 className="text-xl font-orbitron text-primary mb-4">🌟 ABERTURA MÍSTICA</h4>
+                      <div className="text-sm text-foreground leading-relaxed">
+                        {parsedText.abertura}
+                      </div>
+                    </div>
+
+                    <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
+                      <h4 className="text-xl font-orbitron text-primary mb-4">🏆 SEU ARQUÉTIPO: {data.oracleData.arquetipo}</h4>
+                      <p className="text-sm text-foreground mb-3">
+                        <strong>Essência:</strong> {data.oracleData.essencia}
+                      </p>
+                      <div className="text-sm text-foreground leading-relaxed">
+                        {parsedText.nucleo}
+                      </div>
+                    </div>
+
+                    <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
+                      <h4 className="text-xl font-orbitron text-primary mb-4">💎 TALENTOS OCULTOS</h4>
+                      <div className="text-sm text-foreground leading-relaxed">
+                        {parsedText.talentos}
+                      </div>
+                    </div>
+
+                    <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
+                      <h4 className="text-xl font-orbitron text-primary mb-4">⚡ CAMINHO DOURADO</h4>
+                      <div className="text-sm text-foreground leading-relaxed">
+                        {parsedText.caminho}
+                      </div>
+                    </div>
+
+                    <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
+                      <h4 className="text-xl font-orbitron text-primary mb-4">💰 POTENCIAL MATERIAL</h4>
+                      <div className="text-sm text-foreground leading-relaxed">
+                        {parsedText.potencial}
+                      </div>
+                    </div>
+
+                    <div className="bg-destructive/20 border-2 border-destructive rounded-lg p-4">
+                      <h4 className="text-lg font-orbitron text-destructive mb-2">🔥 OBSTÁCULO INVISÍVEL</h4>
+                      <div className="text-sm text-foreground">
+                        {parsedText.obstaculo}
+                      </div>
+                    </div>
+
+                    <div className="bg-primary/10 border border-primary rounded-lg p-5">
+                      <h4 className="text-lg font-orbitron text-primary mb-2">🚀 PRÓXIMO MOVIMENTO</h4>
+                      <p className="text-sm text-foreground font-medium">
+                        {data.oracleData.acao_imediata}
+                      </p>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-2 border-primary rounded-lg p-4">
+                      <h4 className="text-lg font-orbitron text-primary mb-2">✨ ENCERRAMENTO MÍSTICO</h4>
+                      <div className="text-sm text-foreground font-medium">
+                        {parsedText.encerramento}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </>
+        ) : (
+          <div className="bg-card border-2 border-primary rounded-lg p-6 space-y-6 matrix-border">
+            <div className="text-center space-y-4 py-8">
+              <h3 className="text-xl font-orbitron text-primary">
+                Preparando sua revelação...
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Aguarde enquanto deciframos seu DNA financeiro
               </p>
             </div>
           </div>
-        </div>
+        )}
 
-        <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-2 border-primary rounded-lg p-6 space-y-4 animate-pulse-glow">
+        {data.oracleData && (
+          <>
+            <div className="bg-muted/30 backdrop-blur-sm border-2 border-primary/50 rounded-lg p-5 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-pulse" />
+              <div className="relative z-10 space-y-3">
+                <p className="text-base text-center font-orbitron text-primary">
+                  📈 ESTA É APENAS UMA PRÉVIA DO SEU POTENCIAL...
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-2 border-primary rounded-lg p-6 space-y-4 animate-pulse-glow">
+          <div className="space-y-2 text-sm text-foreground">
+            <p className="font-bold text-center text-lg">🚀 NO RELATÓRIO COMPLETO, você terá acesso a:</p>
+            <ul className="space-y-1 text-xs">
+              <li>✅ 15 Números de Poder Personalizados + Aplicações Financeiras!</li>
+              <li>✅ Mapa para Alcançar Seus Primeiros R$ 10.000! Usando a sua numerologia</li>
+              <li>✅ Estratégias Específicas para Seu Perfil Numerológico!</li>
+              <li>✅ Métodos de Multiplicação de Renda por Arquétipo!</li>
+              <li>✅ Como Superar Bloqueios Energético-Financeiros!</li>
+              <li>✅ Plano de Escape do CLT em 6 Meses</li>
+            </ul>
+          </div>
+
           <div className="text-center space-y-3">
             <p className="text-2xl font-orbitron text-primary matrix-glow">
               💥 APROVEITE A OFERTA DE LANÇAMENTO - SOMENTE HOJE! 💥
@@ -199,41 +236,29 @@ const Step5PreviewReport = () => {
             size="lg"
             className="w-full text-xl font-orbitron bg-primary hover:bg-primary/80 text-primary-foreground border-2 border-primary shadow-lg hover:shadow-xl transition-all h-16"
           >
-            🔓 Desbloquear Relatório Completo
+            🔓 Relatório Completo
           </Button>
-
-          <div className="space-y-2 text-sm text-foreground">
-            <p className="font-bold">🚀 NO RELATÓRIO COMPLETO, você terá acesso a:</p>
-            <ul className="space-y-1 text-xs">
-              <li>✅ 15 Números de Poder personalizados + aplicações financeiras!</li>
-              <li>✅ Mapa Mensal de Oportunidades para os próximos 6 meses!</li>
-              <li>✅ Cronograma dia-a-dia para alcançar seus primeiros R$ 10.000!</li>
-              <li>✅ Estratégias específicas para seu perfil numerológico!</li>
-              <li>✅ Como atrair parceiros ideais baseado no seu DNA!</li>
-              <li>✅ Rituais financeiros que potencializam seus números pessoais!</li>
-              <li>✅ Timing perfeito para grandes decisões financeiras!</li>
-              <li>✅ Métodos de multiplicação de renda por arquétipo!</li>
-              <li>✅ Como superar bloqueios energético-financeiros!</li>
-              <li>✅ Plano de escape do CLT em 6 meses (se desejar)!</li>
-            </ul>
-          </div>
 
           <p className="text-xs text-center text-muted-foreground">
             Pagamento seguro via PIX • Acesso instantâneo
           </p>
-        </div>
+            </div>
+          </>
+        )}
 
-        <div className="text-center space-y-2">
-          <p className="text-base font-orbitron text-primary">
-            🚀 NÃO PERCA ESSA CHANCE! O TEMPO É AGORA!
-          </p>
-          <p className="text-sm text-muted-foreground">
-            A hora de mudar sua vida financeira é HOJE! Clique e descubra seu verdadeiro potencial!
-          </p>
-          <p className="text-xs text-muted-foreground">
-            💎 Total de Pontos Acumulados: <span className="text-primary font-orbitron">{data.points}</span>
-          </p>
-        </div>
+        {data.oracleData && (
+          <div className="text-center space-y-2">
+            <p className="text-base font-orbitron text-primary">
+              🚀 NÃO PERCA ESSA CHANCE! O TEMPO É AGORA!
+            </p>
+            <p className="text-sm text-muted-foreground">
+              A hora de mudar sua vida financeira é HOJE! Clique e descubra seu verdadeiro potencial!
+            </p>
+            <p className="text-xs text-muted-foreground">
+              💎 Dinheiro Acumulado: <span className="text-primary font-orbitron">R$ {data.money}</span>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
