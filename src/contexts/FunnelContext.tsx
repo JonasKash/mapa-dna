@@ -32,8 +32,8 @@ interface FunnelContextType {
   previousStep: () => void;
   resetFunnel: () => void;
   calculateMonthlyPotential: () => number;
-  sendWebhook: (eventType: 'payment_click' | 'quiz_complete' | 'data_collected') => Promise<boolean>;
-  sendWebhookWithData: (eventType: 'payment_click' | 'quiz_complete' | 'data_collected', customData?: Partial<FunnelData>) => Promise<boolean>;
+  sendWebhook: (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated') => Promise<boolean>;
+  sendWebhookWithData: (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated', customData?: Partial<FunnelData>) => Promise<boolean>;
   generateOracle: () => Promise<void>;
 }
 
@@ -102,7 +102,7 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     return Math.max(monthlyPotential, 1800);
   }, [data.money, data.achievements]);
 
-  const sendWebhook = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected'): Promise<boolean> => {
+  const sendWebhook = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated'): Promise<boolean> => {
     console.log('sendWebhook called with eventType:', eventType);
     console.log('Current funnel data:', data);
     console.log('Tracking data:', trackingData);
@@ -120,7 +120,7 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     return await sendWebhookData(payload);
   }, [data, trackingData]);
 
-  const sendWebhookWithData = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected', customData?: Partial<FunnelData>): Promise<boolean> => {
+  const sendWebhookWithData = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated', customData?: Partial<FunnelData>): Promise<boolean> => {
     console.log('sendWebhookWithData called with eventType:', eventType);
     console.log('Custom data:', customData);
     console.log('Current funnel data:', data);
@@ -141,14 +141,23 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
   }, [data, trackingData]);
 
   const generateOracle = useCallback(async () => {
+    console.log('=== CONTEXT: generateOracle called ===');
+    console.log('Current data:', data);
+    console.log('oracleData exists:', !!data.oracleData);
+    console.log('isGeneratingOracle:', data.isGeneratingOracle);
+    
     if (data.oracleData || data.isGeneratingOracle) {
+      console.log('Oracle already generated or generating, skipping...');
       return; // Já gerou ou está gerando
     }
 
+    console.log('Setting isGeneratingOracle to true');
     setData(prev => ({ ...prev, isGeneratingOracle: true }));
 
     try {
+      console.log('Calling generateOracleRevelation with data:', data);
       const oracleData = await generateOracleRevelation(data);
+      console.log('Oracle data received in context:', oracleData);
       setData(prev => ({ 
         ...prev, 
         oracleData, 
@@ -156,7 +165,31 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
       }));
     } catch (error) {
       console.error('Error generating oracle revelation:', error);
-      setData(prev => ({ ...prev, isGeneratingOracle: false }));
+      
+      // Verificar se é erro de rate limiting
+      if (error.message && error.message.includes('RATE_LIMIT_EXCEEDED')) {
+        console.log('Rate limit exceeded, showing fallback response');
+        // Usar resposta de fallback em caso de rate limiting
+        const fallbackData = {
+          revelacao: `${data.name}, sua assinatura energética carrega o peso de montanhas e o brilho do ouro. Vejo em sua vibração numérica uma força criativa inata que ressoa com abundância. Sua data carrega a marca de um visionário das oportunidades, alguém que vê além do óbvio. Você já possui a capacidade de identificar tendências antes da concorrência. Dentro de você existe um magnetismo natural para atrair prosperidade. Seu dom natural é transformar ideias em realidade. Sua estratégia dourada envolve focar em inovação e liderança, criando soluções únicas no mercado. Sua possibilidade energética revela potencial de R$ 1.500 em 30 dias, R$ 4.200 em 90 dias e R$ 7.800 em 180 dias. O obstáculo invisível é a limitação autoimposta de acreditar que precisa de mais tempo. Nos próximos 7 dias, comece a estruturar sua primeira fonte de renda digital. ${data.name}, sua transformação financeira já começou.`,
+          arquetipo: 'O Visionário das Oportunidades',
+          essencia: 'Força criativa com magnetismo para abundância',
+          acao_imediata: 'Estruturar primeira fonte de renda digital em 7 dias'
+        };
+        
+        setData(prev => ({ 
+          ...prev, 
+          oracleData: fallbackData,
+          isGeneratingOracle: false
+        }));
+      } else {
+        console.log('Setting oracle data to null to show error state');
+        setData(prev => ({ 
+          ...prev, 
+          isGeneratingOracle: false,
+          oracleData: null // Clear oracle data on error
+        }));
+      }
     }
   }, [data]);
 

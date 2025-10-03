@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Backend API
+  backend:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: matrix-mind-backend
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3002/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - matrix-mind-network
+
+  # Frontend (React + Nginx)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        - VITE_BACKEND_URL=${VITE_BACKEND_URL:-http://localhost:3002}
+    container_name: matrix-mind-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - matrix-mind-network
+
+networks:
+  matrix-mind-network:
+    driver: bridge
+
+# Para desenvolvimento local, use:
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml up

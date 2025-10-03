@@ -3,7 +3,7 @@ import { useFunnel } from '@/contexts/FunnelContext';
 import { Button } from '@/components/ui/button';
 
 const Step5PreviewReport = () => {
-  const { data, nextStep, calculateMonthlyPotential, generateOracle } = useFunnel();
+  const { data, nextStep, calculateMonthlyPotential, generateOracle, sendWebhookWithData } = useFunnel();
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
 
   // Função para dividir o texto da revelação em seções
@@ -31,10 +31,41 @@ const Step5PreviewReport = () => {
 
   // Gerar revelação do oráculo quando o componente for montado
   useEffect(() => {
+    console.log('=== STEP5: useEffect triggered ===');
+    console.log('data.name:', data.name);
+    console.log('data.birthDate:', data.birthDate);
+    console.log('data.oracleData:', data.oracleData);
+    console.log('data.isGeneratingOracle:', data.isGeneratingOracle);
+    
     if (data.name && data.birthDate && !data.oracleData && !data.isGeneratingOracle) {
+      console.log('Calling generateOracle from Step5');
       generateOracle();
+    } else {
+      console.log('Conditions not met for generateOracle call');
     }
   }, [data.name, data.birthDate, data.oracleData, data.isGeneratingOracle, generateOracle]);
+
+  // Enviar webhook quando o oráculo estiver pronto
+  useEffect(() => {
+    if (data.oracleData && !data.isGeneratingOracle) {
+      console.log('=== STEP5: Oracle ready, sending webhook ===');
+      console.log('Oracle data:', data.oracleData);
+      
+      // Enviar webhook com todos os dados + resultado do oráculo
+      sendWebhookWithData('oracle_generated', {
+        oracleData: data.oracleData,
+        monthlyPotential: calculateMonthlyPotential()
+      }).then(success => {
+        if (success) {
+          console.log('Webhook sent successfully with oracle data');
+        } else {
+          console.error('Failed to send webhook with oracle data');
+        }
+      }).catch(error => {
+        console.error('Error sending webhook with oracle data:', error);
+      });
+    }
+  }, [data.oracleData, data.isGeneratingOracle, sendWebhookWithData, calculateMonthlyPotential]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;

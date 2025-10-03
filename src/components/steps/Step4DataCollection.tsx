@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import NotificationBadge from '@/components/NotificationBadge';
 
 const Step4DataCollection = () => {
-  const { data, updateData, addMoney, addAchievement, nextStep, sendWebhookWithData } = useFunnel();
+  const { data, updateData, addMoney, addAchievement, nextStep } = useFunnel();
   const { playAchievement } = useSound();
   const [name, setName] = useState(data.name);
   const [birthDate, setBirthDate] = useState(data.birthDate);
@@ -32,13 +32,7 @@ const Step4DataCollection = () => {
     playAchievement();
     setShowNotification(true);
 
-    // Send webhook with the current form data immediately
-    try {
-      await sendWebhookWithData('data_collected', { name, birthDate });
-      console.log('Webhook sent successfully for data collection with name:', name, 'and birthDate:', birthDate);
-    } catch (error) {
-      console.error('Error sending webhook for data collection:', error);
-    }
+    // Webhook será enviado após a geração do oráculo no Step5
 
     setTimeout(() => {
       nextStep();

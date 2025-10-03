@@ -1,0 +1,14 @@
+# Scripts executáveis
+*.sh text eol=lf
+deploy.sh text eol=lf
+install-dependencies.sh text eol=lf
+setup-ssl.sh text eol=lf
+monitor.sh text eol=lf
+
+# Dockerfiles
+Dockerfile text eol=lf
+Dockerfile.frontend text eol=lf
+
+# Configurações
+docker-compose*.yml text eol=lf
+nginx.conf text eol=lf

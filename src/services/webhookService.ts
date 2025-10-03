@@ -23,6 +23,14 @@ interface WebhookPayload {
   monthly_potential: number;
   achievements: string[];
   
+  // Oracle Data (quando disponível)
+  oracle_data?: {
+    revelacao: string;
+    arquetipo: string;
+    essencia: string;
+    acao_imediata: string;
+  };
+  
   // Technical Data
   timestamp: string;
   user_agent: string;
@@ -30,7 +38,7 @@ interface WebhookPayload {
   current_step: number;
   
   // Event Type
-  event_type: 'payment_click' | 'quiz_complete' | 'data_collected';
+  event_type: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated';
 }
 
 export const sendWebhookData = async (payload: WebhookPayload): Promise<boolean> => {
@@ -76,7 +84,7 @@ export const sendWebhookData = async (payload: WebhookPayload): Promise<boolean>
 export const createWebhookPayload = (
   funnelData: any,
   trackingData: any,
-  eventType: 'payment_click' | 'quiz_complete' | 'data_collected'
+  eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated'
 ): WebhookPayload => {
   return {
     // UTM Tracking
@@ -102,6 +110,14 @@ export const createWebhookPayload = (
     money: funnelData?.money || 0,
     monthly_potential: funnelData?.monthlyPotential || 0,
     achievements: funnelData?.achievements || [],
+    
+    // Oracle Data (quando disponível)
+    oracle_data: funnelData?.oracleData ? {
+      revelacao: funnelData.oracleData.revelacao,
+      arquetipo: funnelData.oracleData.arquetipo,
+      essencia: funnelData.oracleData.essencia,
+      acao_imediata: funnelData.oracleData.acao_imediata
+    } : undefined,
     
     // Technical Data
     timestamp: new Date().toISOString(),
