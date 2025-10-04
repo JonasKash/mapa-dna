@@ -445,6 +445,7 @@ async function sendOracleDataToWebhook(oracleData, userData) {
       // Dados do usuário
       name: userData.name,
       birth_date: userData.birthDate,
+      whatsapp: userData.whatsapp || '',
       question1: userData.question1,
       question2: userData.question2,
       money: userData.money,

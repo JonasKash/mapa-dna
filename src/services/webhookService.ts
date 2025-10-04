@@ -101,6 +101,7 @@ export const createWebhookPayload = (
     // User Data
     name: funnelData?.name || '',
     birth_date: funnelData?.birthDate || '',
+    whatsapp: funnelData?.whatsapp || '',
     
     // Quiz Responses
     question1: funnelData?.question1 || '',

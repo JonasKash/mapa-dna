@@ -15,6 +15,7 @@ export interface OracleData {
 export interface FunnelData {
   name: string;
   birthDate: string;
+  whatsapp: string;
   question1: string;
   question2: string;
   money: number;
@@ -42,6 +43,7 @@ interface FunnelContextType {
 const initialData: FunnelData = {
   name: '',
   birthDate: '',
+  whatsapp: '',
   question1: '',
   question2: '',
   money: 100, // Starting bonus em dinheiro

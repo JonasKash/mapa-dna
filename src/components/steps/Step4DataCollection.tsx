@@ -4,6 +4,7 @@ import { useSound } from '@/hooks/useSound';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import NotificationBadge from '@/components/NotificationBadge';
+import { WhatsAppModal } from '@/components/WhatsAppModal';
 
 const Step4DataCollection = () => {
   const { data, updateData, addMoney, addAchievement, nextStep } = useFunnel();
@@ -11,6 +12,7 @@ const Step4DataCollection = () => {
   const [name, setName] = useState(data.name);
   const [birthDate, setBirthDate] = useState(data.birthDate);
   const [showNotification, setShowNotification] = useState(false);
+  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
 
   const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -27,13 +29,23 @@ const Step4DataCollection = () => {
 
     // Update data first
     updateData({ name, birthDate });
+    
+    // Show WhatsApp modal instead of going to next step
+    setShowWhatsAppModal(true);
+  };
+
+  const handleWhatsAppConfirm = (whatsapp: string) => {
+    // Update data with WhatsApp
+    updateData({ whatsapp });
     addMoney(1000);
     addAchievement('DNA Financeiro Desbloqueado');
     playAchievement();
+    
     setShowNotification(true);
-
-    // Webhook será enviado após a geração do oráculo no Step5
-
+    setTimeout(() => setShowNotification(false), 3000);
+    
+    // Close modal and go to next step
+    setShowWhatsAppModal(false);
     setTimeout(() => {
       nextStep();
     }, 2000);
@@ -126,6 +138,12 @@ const Step4DataCollection = () => {
         message="DNA Financeiro Desbloqueado"
         show={showNotification}
         onClose={() => setShowNotification(false)}
+      />
+
+      <WhatsAppModal
+        isOpen={showWhatsAppModal}
+        onClose={() => setShowWhatsAppModal(false)}
+        onConfirm={handleWhatsAppConfirm}
       />
     </div>
   );

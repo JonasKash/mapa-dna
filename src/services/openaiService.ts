@@ -10,6 +10,7 @@ interface OracleResponse {
 interface FunnelData {
   name: string;
   birthDate: string;
+  whatsapp: string;
   question1: string;
   question2: string;
   money: number;
