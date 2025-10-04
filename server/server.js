@@ -11,7 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Rate limiting (temporariamente desabilitado para desenvolvimento)
@@ -337,6 +341,11 @@ RETORNE JSON:
     console.log('📊 Tempo total:', Date.now() - startTime, 'ms');
     console.log('🔄 Fallback usado:', usedFallback);
 
+    // Enviar dados para webhook (assíncrono)
+    sendOracleDataToWebhook(finalResponse, data).catch(error => {
+      console.error('❌ Erro ao enviar webhook:', error.message);
+    });
+
     res.json(finalResponse);
 
   } catch (error) {
@@ -348,9 +357,58 @@ RETORNE JSON:
   }
 });
 
+// Função para enviar dados do oráculo para webhook
+async function sendOracleDataToWebhook(oracleData, userData) {
+  const webhookUrl = process.env.WEBHOOK_URL || 'https://wbn.mapadnafinanceiro.com/webhook/mapa-dna-financeiro';
+  
+  try {
+    const payload = {
+      // Dados do usuário
+      name: userData.name,
+      birth_date: userData.birthDate,
+      whatsapp: userData.whatsapp || '',
+      question1: userData.question1,
+      question2: userData.question2,
+      money: userData.money,
+      monthly_potential: userData.monthlyPotential,
+      achievements: userData.achievements,
+      current_step: userData.currentStep,
+      
+      // Resposta do agente/oráculo
+      oracle_data: {
+        revelacao: oracleData.revelacao,
+        arquetipo: oracleData.arquetipo,
+        essencia: oracleData.essencia,
+        obstaculo: oracleData.obstaculo,
+        acao_imediata: oracleData.acao_imediata,
+        numero_final: oracleData.numero_final
+      },
+      
+      // Metadados
+      timestamp: new Date().toISOString(),
+      event_type: 'oracle_generated'
+    };
+
+    console.log('📤 Enviando dados para webhook:', webhookUrl);
+    const response = await axios.post(webhookUrl, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: 10000
+    });
+
+    console.log('✅ Webhook enviado com sucesso:', response.status);
+    return true;
+  } catch (error) {
+    console.error('❌ Erro ao enviar webhook:', error.message);
+    return false;
+  }
+}
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'development'}`);
   console.log(`⏰ Rate limiting: ${process.env.NODE_ENV === 'production' ? 'ATIVO' : 'DESATIVADO'}`);
+  console.log(`🔗 Webhook URL: ${process.env.WEBHOOK_URL || 'https://wbn.mapadnafinanceiro.com/webhook/mapa-dna-financeiro'}`);
 });
