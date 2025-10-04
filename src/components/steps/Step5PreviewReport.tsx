@@ -8,16 +8,13 @@ const Step5PreviewReport = () => {
 
   // Função para dividir o texto da revelação em seções
   const parseRevelationText = (text: string) => {
-    const sentences = text.split('. ').filter(s => s.trim());
-    
+    // Como agora o texto é mais simples, vamos usar o texto completo como abertura
     return {
-      abertura: sentences[0] + '.',
-      nucleo: sentences.slice(1, 3).join('. ') + '.',
-      talentos: sentences.slice(3, 6).join('. ') + '.',
-      caminho: sentences.slice(6, 8).join('. ') + '.',
-      potencial: sentences.slice(8, 9).join('. ') + '.',
-      obstaculo: sentences.slice(9, 10).join('. ') + '.',
-      encerramento: sentences.slice(-1)[0]
+      abertura: text,
+      nucleo: `Como ${data.oracleData?.arquetipo}, você carrega a energia de ${data.oracleData?.essencia}.`,
+      caminho: `Estratégia baseada em suas respostas: "${data.question1}" e "${data.question2}".`,
+      potencial: `30 dias: +40% na renda | 90 dias: +120% na renda | 180 dias: +300% na renda`,
+      encerramento: `${data.name}, o número ${data.oracleData?.numero_final} confirma: sua transformação financeira já começou.`
     };
   };
 
@@ -146,7 +143,12 @@ const Step5PreviewReport = () => {
                 return (
                   <div className="space-y-6">
                     <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
-                      <h4 className="text-xl font-orbitron text-primary mb-4">🌟 ABERTURA MÍSTICA</h4>
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-xl font-orbitron text-primary">🌟 ABERTURA MÍSTICA</h4>
+                        <div className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-lg font-bold">
+                          {data.oracleData?.numero_final}
+                        </div>
+                      </div>
                       <div className="text-sm text-foreground leading-relaxed">
                         {parsedText.abertura}
                       </div>
@@ -162,12 +164,6 @@ const Step5PreviewReport = () => {
                       </div>
                     </div>
 
-                    <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
-                      <h4 className="text-xl font-orbitron text-primary mb-4">💎 TALENTOS OCULTOS</h4>
-                      <div className="text-sm text-foreground leading-relaxed">
-                        {parsedText.talentos}
-                      </div>
-                    </div>
 
                     <div className="bg-muted/30 border border-primary/50 rounded-lg p-5">
                       <h4 className="text-xl font-orbitron text-primary mb-4">⚡ CAMINHO DOURADO</h4>
@@ -185,8 +181,8 @@ const Step5PreviewReport = () => {
 
                     <div className="bg-destructive/20 border-2 border-destructive rounded-lg p-4">
                       <h4 className="text-lg font-orbitron text-destructive mb-2">🔥 OBSTÁCULO INVISÍVEL</h4>
-                      <div className="text-sm text-foreground">
-                        {parsedText.obstaculo}
+                      <div className="text-sm text-foreground font-semibold">
+                        {data.oracleData.obstaculo}
                       </div>
                     </div>
 

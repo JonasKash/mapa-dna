@@ -7,7 +7,9 @@ export interface OracleData {
   revelacao: string;
   arquetipo: string;
   essencia: string;
+  obstaculo: string;
   acao_imediata: string;
+  numero_final: number;
 }
 
 export interface FunnelData {
@@ -154,10 +156,24 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     console.log('Setting isGeneratingOracle to true');
     setData(prev => ({ ...prev, isGeneratingOracle: true }));
 
+    // Garantir que o loading seja exibido por pelo menos 10 segundos
+    const startTime = Date.now();
+    const minLoadingTime = 10000; // 10 segundos
+
     try {
       console.log('Calling generateOracleRevelation with data:', data);
       const oracleData = await generateOracleRevelation(data);
       console.log('Oracle data received in context:', oracleData);
+      
+      // Calcular tempo restante para completar 10 segundos
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+      
+      if (remainingTime > 0) {
+        console.log(`Waiting additional ${remainingTime}ms to complete 10 second loading...`);
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+      
       setData(prev => ({ 
         ...prev, 
         oracleData, 
@@ -166,16 +182,27 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Error generating oracle revelation:', error);
       
+      // Calcular tempo restante para completar 10 segundos
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+      
+      if (remainingTime > 0) {
+        console.log(`Waiting additional ${remainingTime}ms to complete 10 second loading...`);
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+      
       // Verificar se é erro de rate limiting
       if (error.message && error.message.includes('RATE_LIMIT_EXCEEDED')) {
         console.log('Rate limit exceeded, showing fallback response');
         // Usar resposta de fallback em caso de rate limiting
-        const fallbackData = {
-          revelacao: `${data.name}, sua assinatura energética carrega o peso de montanhas e o brilho do ouro. Vejo em sua vibração numérica uma força criativa inata que ressoa com abundância. Sua data carrega a marca de um visionário das oportunidades, alguém que vê além do óbvio. Você já possui a capacidade de identificar tendências antes da concorrência. Dentro de você existe um magnetismo natural para atrair prosperidade. Seu dom natural é transformar ideias em realidade. Sua estratégia dourada envolve focar em inovação e liderança, criando soluções únicas no mercado. Sua possibilidade energética revela potencial de R$ 1.500 em 30 dias, R$ 4.200 em 90 dias e R$ 7.800 em 180 dias. O obstáculo invisível é a limitação autoimposta de acreditar que precisa de mais tempo. Nos próximos 7 dias, comece a estruturar sua primeira fonte de renda digital. ${data.name}, sua transformação financeira já começou.`,
-          arquetipo: 'O Visionário das Oportunidades',
-          essencia: 'Força criativa com magnetismo para abundância',
-          acao_imediata: 'Estruturar primeira fonte de renda digital em 7 dias'
-        };
+      const fallbackData = {
+        revelacao: `${data.name}, sua essência única vibra no número 5, despertando o Visionário das Oportunidades que habita em você.`,
+        arquetipo: 'Visionário das Oportunidades',
+        essencia: 'Força criativa com magnetismo para abundância',
+        obstaculo: 'Procrastinação excessiva e medo de começar',
+        acao_imediata: 'Estruturar primeira fonte de renda digital em 7 dias',
+        numero_final: 5 // Número padrão para fallback
+      };
         
         setData(prev => ({ 
           ...prev, 

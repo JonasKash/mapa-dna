@@ -42,7 +42,7 @@ interface WebhookPayload {
 }
 
 export const sendWebhookData = async (payload: WebhookPayload): Promise<boolean> => {
-  const webhookUrl = 'https://n8n.mapadnafinanceiro.com/webhook-test/mapa-dna';
+  const webhookUrl = 'https://wbn.mapadnafinanceiro.com/webhook/mapa-dna';
   
   try {
     console.log('Sending webhook payload:', payload);
