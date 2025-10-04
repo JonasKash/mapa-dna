@@ -55,9 +55,9 @@ export const generateOracleRevelation = async (data: FunnelData): Promise<Oracle
     console.log(`[${requestId}] 🚀 Making request to backend...`);
     const fetchStartTime = Date.now();
     
-    // Implementar timeout de 10 segundos no frontend
+    // Implementar timeout de 15 segundos no frontend (mais que o loading de 10s)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
     
     const response = await fetch(`${BACKEND_URL}/api/oracle/generate`, {
       method: 'POST',

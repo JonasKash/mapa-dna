@@ -158,23 +158,17 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     console.log('Setting isGeneratingOracle to true');
     setData(prev => ({ ...prev, isGeneratingOracle: true }));
 
-    // Garantir que o loading seja exibido por pelo menos 10 segundos
-    const startTime = Date.now();
-    const minLoadingTime = 10000; // 10 segundos
+    // Sempre aguardar exatamente 10 segundos para o loading
+    const loadingPromise = new Promise(resolve => setTimeout(resolve, 10000));
 
     try {
       console.log('Calling generateOracleRevelation with data:', data);
-      const oracleData = await generateOracleRevelation(data);
+      const oracleDataPromise = generateOracleRevelation(data);
+      
+      // Aguardar tanto o loading quanto a resposta da API
+      const [oracleData] = await Promise.all([oracleDataPromise, loadingPromise]);
+      
       console.log('Oracle data received in context:', oracleData);
-      
-      // Calcular tempo restante para completar 10 segundos
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
-      
-      if (remainingTime > 0) {
-        console.log(`Waiting additional ${remainingTime}ms to complete 10 second loading...`);
-        await new Promise(resolve => setTimeout(resolve, remainingTime));
-      }
       
       setData(prev => ({ 
         ...prev, 
@@ -184,19 +178,10 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Error generating oracle revelation:', error);
       
-      // Calcular tempo restante para completar 10 segundos
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+      // Aguardar o loading mesmo em caso de erro
+      await loadingPromise;
       
-      if (remainingTime > 0) {
-        console.log(`Waiting additional ${remainingTime}ms to complete 10 second loading...`);
-        await new Promise(resolve => setTimeout(resolve, remainingTime));
-      }
-      
-      // Verificar se é erro de rate limiting
-      if (error.message && error.message.includes('RATE_LIMIT_EXCEEDED')) {
-        console.log('Rate limit exceeded, showing fallback response');
-        // Usar resposta de fallback em caso de rate limiting
+      // Sempre usar resposta de fallback em caso de erro
       const fallbackData = {
         revelacao: `${data.name}, sua essência única vibra no número 5, despertando o Visionário das Oportunidades que habita em você.`,
         arquetipo: 'Visionário das Oportunidades',
@@ -205,20 +190,12 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
         acao_imediata: 'Estruturar primeira fonte de renda digital em 7 dias',
         numero_final: 5 // Número padrão para fallback
       };
-        
-        setData(prev => ({ 
-          ...prev, 
-          oracleData: fallbackData,
-          isGeneratingOracle: false
-        }));
-      } else {
-        console.log('Setting oracle data to null to show error state');
-        setData(prev => ({ 
-          ...prev, 
-          isGeneratingOracle: false,
-          oracleData: null // Clear oracle data on error
-        }));
-      }
+      
+      setData(prev => ({ 
+        ...prev, 
+        oracleData: fallbackData,
+        isGeneratingOracle: false
+      }));
     }
   }, [data]);
 
