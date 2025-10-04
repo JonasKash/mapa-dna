@@ -34,8 +34,8 @@ print_error() {
 
 # Verificar se é root
 if [ "$EUID" -eq 0 ]; then
-    print_error "Não execute este script como root!"
-    exit 1
+    print_warning "Executando como root - algumas operações podem precisar de ajustes"
+    # Continuar com root, mas avisar sobre possíveis problemas
 fi
 
 # Verificar sistema operacional
@@ -50,10 +50,12 @@ print_status "Verificando dependências..."
 if ! command -v docker &> /dev/null; then
     print_status "Instalando Docker..."
     curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    sudo usermod -aG docker $USER
+    sh get-docker.sh
+    if [ "$EUID" -ne 0 ]; then
+        sudo usermod -aG docker $USER
+        print_warning "Você precisa fazer logout e login novamente para usar Docker sem sudo"
+    fi
     print_success "Docker instalado com sucesso"
-    print_warning "Você precisa fazer logout e login novamente para usar Docker sem sudo"
 else
     print_success "Docker já está instalado"
 fi
@@ -61,8 +63,8 @@ fi
 # Verificar Docker Compose
 if ! command -v docker-compose &> /dev/null; then
     print_status "Instalando Docker Compose..."
-    sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
+    curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
     print_success "Docker Compose instalado com sucesso"
 else
     print_success "Docker Compose já está instalado"
@@ -71,8 +73,8 @@ fi
 # Verificar Git
 if ! command -v git &> /dev/null; then
     print_status "Instalando Git..."
-    sudo apt update
-    sudo apt install -y git
+    apt update
+    apt install -y git
     print_success "Git instalado com sucesso"
 else
     print_success "Git já está instalado"
