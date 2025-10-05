@@ -6,53 +6,80 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: matrix-mind-backend
+    container_name: mapadna-backend
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - PORT=3002
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_URL=https://www.mapadnafinanceiro.com
       - WEBHOOK_URL=${WEBHOOK_URL}
       - WEBHOOK_SECRET=${WEBHOOK_SECRET}
-    ports:
-      - "3002:3002"
     networks:
-      - matrix-network
+      - mapadna-network
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-  # Frontend
+  # Frontend + Nginx
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    container_name: matrix-mind-frontend
+    container_name: mapadna-frontend
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-production.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
-      - matrix-network
+      - mapadna-network
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
       interval: 30s
       timeout: 10s
       retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Monitoramento (opcional)
+  watchtower:
+    image: containrrr/watchtower
+    container_name: mapadna-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=3600
+      - WATCHTOWER_INCLUDE_STOPPED=true
+    networks:
+      - mapadna-network
 
 networks:
-  matrix-network:
+  mapadna-network:
     driver: bridge
+    name: mapadna-network
 
 volumes:
   ssl_certs:
+    driver: local
+  nginx_logs:
     driver: local
