@@ -2,6 +2,8 @@
 
 Este guia mostra como fazer o deploy do projeto Mapa da Grana em portas alternativas para evitar conflitos com Docker e n8n.
 
+**Domínio:** lp.mapadnafinanceiro.com
+
 ## 🚨 Problema Resolvido
 
 - **Conflito com Docker**: Portas 80 e 443 já em uso
@@ -38,18 +40,18 @@ sudo ./deploy-alternative.sh
 
 | Serviço | Porta Original | Porta Alternativa | Acesso |
 |---------|----------------|-------------------|---------|
-| **HTTP** | 80 | 8080 | http://seu-ip:8080 |
-| **HTTPS** | 443 | 8443 | https://seu-ip:8443 |
-| **Backend** | 3002 | 3002 | http://seu-ip:3002 |
+| **HTTP** | 80 | 8080 | http://lp.mapadnafinanceiro.com:8080 |
+| **HTTPS** | 443 | 8443 | https://lp.mapadnafinanceiro.com:8443 |
+| **Backend** | 3002 | 3002 | http://lp.mapadnafinanceiro.com:3002 |
 
 ## 🔧 Configuração Manual
 
 ### 1. Arquivo .env
 ```env
 # URLs para portas alternativas
-FRONTEND_URL=https://seu-ip:8443
-VITE_BACKEND_URL=https://seu-ip:8443
-CORS_ORIGIN=https://seu-ip:8443
+FRONTEND_URL=https://lp.mapadnafinanceiro.com:8443
+VITE_BACKEND_URL=https://lp.mapadnafinanceiro.com:8443
+CORS_ORIGIN=https://lp.mapadnafinanceiro.com:8443
 ```
 
 ### 2. Deploy com Docker
@@ -69,14 +71,14 @@ docker-compose -f docker-compose.alternative.yml ps
 sudo apt install certbot
 
 # Obter certificado (usar porta diferente se necessário)
-certbot certonly --standalone -d www.mapadnafinanceiro.com --http-01-port=8080
+certbot certonly --standalone -d lp.mapadnafinanceiro.com --http-01-port=8080
 ```
 
 ### 2. Copiar Certificados
 ```bash
 mkdir -p ssl
-sudo cp /etc/letsencrypt/live/www.mapadnafinanceiro.com/fullchain.pem ssl/
-sudo cp /etc/letsencrypt/live/www.mapadnafinanceiro.com/privkey.pem ssl/
+sudo cp /etc/letsencrypt/live/lp.mapadnafinanceiro.com/fullchain.pem ssl/
+sudo cp /etc/letsencrypt/live/lp.mapadnafinanceiro.com/privkey.pem ssl/
 ```
 
 ## 📊 Comandos de Manutenção
@@ -87,9 +89,9 @@ sudo cp /etc/letsencrypt/live/www.mapadnafinanceiro.com/privkey.pem ssl/
 docker-compose -f docker-compose.alternative.yml ps
 
 # Health checks
-curl http://seu-ip:8080/health
-curl https://seu-ip:8443/health
-curl https://seu-ip:8443/api/health
+curl http://lp.mapadnafinanceiro.com:8080/health
+curl https://lp.mapadnafinanceiro.com:8443/health
+curl https://lp.mapadnafinanceiro.com:8443/api/health
 ```
 
 ### Logs
@@ -127,10 +129,10 @@ sudo ufw status
 
 Após o deploy, a aplicação estará disponível em:
 
-- **Frontend HTTP**: http://seu-ip:8080
-- **Frontend HTTPS**: https://seu-ip:8443
-- **API**: https://seu-ip:8443/api/
-- **Health Check**: https://seu-ip:8443/health
+- **Frontend HTTP**: http://lp.mapadnafinanceiro.com:8080
+- **Frontend HTTPS**: https://lp.mapadnafinanceiro.com:8443
+- **API**: https://lp.mapadnafinanceiro.com:8443/api/
+- **Health Check**: https://lp.mapadnafinanceiro.com:8443/health
 
 ## 🚨 Troubleshooting
 
@@ -159,7 +161,7 @@ docker-compose -f docker-compose.alternative.yml up -d --build --force-recreate
 ls -la ssl/
 
 # Testar SSL
-openssl s_client -connect seu-ip:8443 -servername seu-ip
+openssl s_client -connect lp.mapadnafinanceiro.com:8443 -servername lp.mapadnafinanceiro.com
 ```
 
 ## 📈 Vantagens das Portas Alternativas
