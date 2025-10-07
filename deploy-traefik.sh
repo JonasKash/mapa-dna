@@ -69,14 +69,14 @@ else
     print_success "✅ Traefik está rodando"
 fi
 
-# Verificar se a rede 'painel' existe
-print_status "Verificando se a rede 'painel' existe..."
-if ! docker network ls | grep -q painel; then
-    print_error "Rede 'painel' não encontrada. Crie a rede primeiro:"
-    print_error "docker network create painel"
+# Verificar se a rede 'proxy' existe
+print_status "Verificando se a rede 'proxy' existe..."
+if ! docker network ls | grep -q proxy; then
+    print_error "Rede 'proxy' não encontrada. Crie a rede primeiro:"
+    print_error "docker network create proxy"
     exit 1
 else
-    print_success "✅ Rede 'painel' encontrada"
+    print_success "✅ Rede 'proxy' encontrada"
 fi
 
 # Verificar se o arquivo .env existe
@@ -107,7 +107,7 @@ fi
 
 # Build e start dos containers
 print_status "Construindo e iniciando containers..."
-docker-compose -f docker-compose.traefik.yml up -d --build
+docker-compose -f docker-compose.traefik.yml up -d --build --remove-orphans
 
 # Aguardar containers iniciarem
 print_status "Aguardando containers iniciarem..."
@@ -121,7 +121,7 @@ docker-compose -f docker-compose.traefik.yml ps
 print_status "Verificando se os serviços estão acessíveis..."
 
 # Verificar backend
-if curl -f http://localhost:3002/api/health &> /dev/null; then
+if curl -f http://localhost:3002/health &> /dev/null; then
     print_success "✅ Backend está rodando em http://localhost:3002"
 else
     print_error "❌ Backend não está respondendo"

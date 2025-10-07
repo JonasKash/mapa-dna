@@ -1,99 +1,49 @@
 version: '3.8'
 
 services:
-  # Backend API
-  backend:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: mapadna-backend-traefik
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=production
-      - PORT=3002
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - FRONTEND_URL=https://lp.mapadnafinanceiro.com
-      - WEBHOOK_URL=${WEBHOOK_URL}
-      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
-    networks:
-      - painel
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  # Frontend + Nginx
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+    image: mapa-dna_frontend:latest
     container_name: mapadna-frontend-traefik
-    restart: unless-stopped
-    volumes:
-      - ./nginx-traefik.conf:/etc/nginx/nginx.conf:ro
-      - ./logs/nginx:/var/log/nginx
-    depends_on:
-      backend:
-        condition: service_healthy
+    restart: always
     networks:
-      - painel
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`lp.mapadnafinanceiro.com`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      test: ["CMD-SHELL", "curl --fail --silent --head http://127.0.0.1/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mapa-dna_backend:latest
+    container_name: mapadna-backend-traefik
+    restart: always
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`lp.mapadnafinanceiro.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.backend.loadbalancer.server.port=3002"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3002/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    labels:
-      # Habilitar Traefik
-      - "traefik.enable=true"
-      
-      # Rede do Traefik
-      - "traefik.docker.network=painel"
-      
-      # Frontend HTTP (redireciona para HTTPS)
-      - "traefik.http.routers.mapadna-http.rule=Host(`lp.mapadnafinanceiro.com`)"
-      - "traefik.http.routers.mapadna-http.entrypoints=web"
-      - "traefik.http.routers.mapadna-http.middlewares=redirect-https"
-      
-      # Frontend HTTPS
-      - "traefik.http.routers.mapadna-https.rule=Host(`lp.mapadnafinanceiro.com`)"
-      - "traefik.http.routers.mapadna-https.entrypoints=websecure"
-      - "traefik.http.routers.mapadna-https.tls.certresolver=letsencryptresolver"
-      - "traefik.http.routers.mapadna-https.service=mapadna-frontend"
-      
-      # Serviço do Frontend
-      - "traefik.http.services.mapadna-frontend.loadbalancer.server.port=80"
-      
-      # API HTTP (redireciona para HTTPS)
-      - "traefik.http.routers.mapadna-api-http.rule=Host(`lp.mapadnafinanceiro.com`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.mapadna-api-http.entrypoints=web"
-      - "traefik.http.routers.mapadna-api-http.middlewares=redirect-https"
-      
-      # API HTTPS
-      - "traefik.http.routers.mapadna-api-https.rule=Host(`lp.mapadnafinanceiro.com`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.mapadna-api-https.entrypoints=websecure"
-      - "traefik.http.routers.mapadna-api-https.tls.certresolver=letsencryptresolver"
-      - "traefik.http.routers.mapadna-api-https.service=mapadna-backend"
-      
-      # Serviço do Backend
-      - "traefik.http.services.mapadna-backend.loadbalancer.server.port=3002"
 
 networks:
-  painel:
+  proxy:
     external: true
-    name: painel
-
-volumes:
-  nginx_logs:
-    driver: local
