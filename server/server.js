@@ -151,7 +151,13 @@ const getFallbackResponse = (data, numerology) => {
   };
 };
 
-// Health check
+// Health check - rota principal para Docker healthcheck
+app.get('/health', (req, res) => {
+  console.log('🔍 Health check solicitado');
+  res.status(200).send('OK');
+});
+
+// Health check - rota da API
 app.get('/api/health', (req, res) => {
   console.log('🔍 Health check solicitado');
   res.json({ 
