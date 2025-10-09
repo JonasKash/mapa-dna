@@ -39,7 +39,7 @@ services:
       - "traefik.http.routers.backend.tls.certresolver=letsencryptresolver"
       - "traefik.http.services.backend.loadbalancer.server.port=3002"
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3002/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3002/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Instalar dependências do sistema
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init wget curl
 
 # Criar usuário não-root para segurança
 RUN addgroup -g 1001 -S nodejs
