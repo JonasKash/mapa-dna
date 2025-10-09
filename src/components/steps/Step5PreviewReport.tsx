@@ -259,7 +259,14 @@ const Step5PreviewReport = () => {
           </div>
 
           <Button
-            onClick={nextStep}
+            onClick={() => {
+              // Scroll para o topo da página
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Aguardar um pouco e depois ir para o próximo passo
+              setTimeout(() => {
+                nextStep();
+              }, 500);
+            }}
             size="lg"
             className="w-full text-xl font-orbitron bg-primary hover:bg-primary/80 text-primary-foreground border-2 border-primary shadow-lg hover:shadow-xl transition-all h-16"
           >
