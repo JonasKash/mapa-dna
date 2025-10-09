@@ -107,12 +107,17 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
   }, [data.money, data.achievements]);
 
   const sendWebhook = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated'): Promise<boolean> => {
-    console.log('sendWebhook called with eventType:', eventType);
+    const timestamp = new Date().toISOString();
+    console.log('=== FUNNEL CONTEXT: sendWebhook ===');
+    console.log('Timestamp:', timestamp);
+    console.log('Event type:', eventType);
     console.log('Current funnel data:', data);
+    console.log('Tracking data available:', !!trackingData);
     console.log('Tracking data:', trackingData);
     
     if (!trackingData) {
-      console.error('Tracking data not available');
+      console.error('❌ Tracking data not available - webhook will not be sent');
+      console.error('This usually means the useTracking hook has not initialized yet');
       return false;
     }
 
@@ -120,28 +125,51 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     await new Promise(resolve => setTimeout(resolve, 50));
 
     const payload = createWebhookPayload(data, trackingData, eventType);
-    console.log('Created webhook payload:', payload);
-    return await sendWebhookData(payload);
+    console.log('✅ Created webhook payload:', payload);
+    console.log('Payload keys:', Object.keys(payload));
+    console.log('Payload event_type:', payload.event_type);
+    console.log('Payload user_id:', payload.user_id);
+    console.log('Payload session_id:', payload.session_id);
+    
+    const result = await sendWebhookData(payload);
+    console.log('Webhook send result:', result);
+    return result;
   }, [data, trackingData]);
 
   const sendWebhookWithData = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated', customData?: Partial<FunnelData>): Promise<boolean> => {
-    console.log('sendWebhookWithData called with eventType:', eventType);
+    const timestamp = new Date().toISOString();
+    console.log('=== FUNNEL CONTEXT: sendWebhookWithData ===');
+    console.log('Timestamp:', timestamp);
+    console.log('Event type:', eventType);
     console.log('Custom data:', customData);
     console.log('Current funnel data:', data);
+    console.log('Tracking data available:', !!trackingData);
     console.log('Tracking data:', trackingData);
     
     if (!trackingData) {
-      console.error('Tracking data not available');
+      console.error('❌ Tracking data not available - webhook will not be sent');
+      console.error('This usually means the useTracking hook has not initialized yet');
       return false;
     }
 
     // Merge current data with custom data
     const mergedData = { ...data, ...customData };
-    console.log('Merged data for webhook:', mergedData);
+    console.log('✅ Merged data for webhook:', mergedData);
+    console.log('Merged data keys:', Object.keys(mergedData));
+    console.log('Has oracle data:', !!mergedData.oracleData);
+    console.log('Has monthly potential:', !!mergedData.monthlyPotential);
 
     const payload = createWebhookPayload(mergedData, trackingData, eventType);
-    console.log('Created webhook payload with custom data:', payload);
-    return await sendWebhookData(payload);
+    console.log('✅ Created webhook payload with custom data:', payload);
+    console.log('Payload keys:', Object.keys(payload));
+    console.log('Payload event_type:', payload.event_type);
+    console.log('Payload user_id:', payload.user_id);
+    console.log('Payload session_id:', payload.session_id);
+    console.log('Payload has oracle_data:', !!payload.oracle_data);
+    
+    const result = await sendWebhookData(payload);
+    console.log('Webhook send result:', result);
+    return result;
   }, [data, trackingData]);
 
   const generateOracle = useCallback(async () => {

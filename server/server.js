@@ -366,6 +366,7 @@ RETORNE JSON:
 // Função para enviar dados do oráculo para webhook
 async function sendOracleDataToWebhook(oracleData, userData) {
   const webhookUrl = process.env.WEBHOOK_URL || 'https://wbn.araxa.app/webhook/mapa-dna-financeiro';
+  const timestamp = new Date().toISOString();
   
   try {
     const payload = {
@@ -391,22 +392,52 @@ async function sendOracleDataToWebhook(oracleData, userData) {
       },
       
       // Metadados
-      timestamp: new Date().toISOString(),
+      timestamp: timestamp,
       event_type: 'oracle_generated'
     };
 
-    console.log('📤 Enviando dados para webhook:', webhookUrl);
+    console.log('=== BACKEND WEBHOOK DEBUG START ===');
+    console.log('Timestamp:', timestamp);
+    console.log('Webhook URL:', webhookUrl);
+    console.log('Payload size:', JSON.stringify(payload).length, 'bytes');
+    console.log('User data keys:', Object.keys(userData));
+    console.log('Oracle data keys:', Object.keys(oracleData));
+    console.log('Full payload:', JSON.stringify(payload, null, 2));
+
     const response = await axios.post(webhookUrl, payload, {
       headers: {
         'Content-Type': 'application/json',
+        'User-Agent': 'MapaDNA-Backend/1.0',
       },
-      timeout: 10000
+      timeout: 15000
     });
 
-    console.log('✅ Webhook enviado com sucesso:', response.status);
+    console.log('=== BACKEND WEBHOOK SUCCESS ===');
+    console.log('Response status:', response.status);
+    console.log('Response statusText:', response.statusText);
+    console.log('Response headers:', response.headers);
+    console.log('Response data:', response.data);
+    console.log('=== BACKEND WEBHOOK DEBUG END ===');
     return true;
   } catch (error) {
-    console.error('❌ Erro ao enviar webhook:', error.message);
+    console.error('=== BACKEND WEBHOOK ERROR ===');
+    console.error('Error timestamp:', timestamp);
+    console.error('Error type:', error.constructor.name);
+    console.error('Error message:', error.message);
+    
+    if (error.response) {
+      console.error('Response status:', error.response.status);
+      console.error('Response statusText:', error.response.statusText);
+      console.error('Response headers:', error.response.headers);
+      console.error('Response data:', error.response.data);
+    } else if (error.request) {
+      console.error('No response received');
+      console.error('Request config:', error.config);
+    } else {
+      console.error('Error setting up request:', error.message);
+    }
+    
+    console.error('=== BACKEND WEBHOOK DEBUG END ===');
     return false;
   }
 }

@@ -43,40 +43,83 @@ interface WebhookPayload {
 
 export const sendWebhookData = async (payload: WebhookPayload): Promise<boolean> => {
   const webhookUrl = 'https://wbn.araxa.app/webhook/mapa-dna-financeiro';
+  const timestamp = new Date().toISOString();
   
   try {
-    console.log('Sending webhook payload:', payload);
+    console.log('=== WEBHOOK DEBUG START ===');
+    console.log('Timestamp:', timestamp);
     console.log('Webhook URL:', webhookUrl);
+    console.log('Payload size:', JSON.stringify(payload).length, 'bytes');
+    console.log('Full payload:', JSON.stringify(payload, null, 2));
     
-    const response = await fetch(webhookUrl, {
+    // Create AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+    
+    const requestOptions = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'User-Agent': 'MapaDNA-Frontend/1.0',
       },
       body: JSON.stringify(payload),
-      mode: 'cors',
+      mode: 'cors' as RequestMode,
+      signal: controller.signal,
+    };
+    
+    console.log('Request options:', {
+      method: requestOptions.method,
+      headers: requestOptions.headers,
+      mode: requestOptions.mode,
+      bodyLength: requestOptions.body.length
     });
-
-    console.log('Webhook response status:', response.status);
-    console.log('Webhook response headers:', Object.fromEntries(response.headers.entries()));
+    
+    const response = await fetch(webhookUrl, requestOptions);
+    clearTimeout(timeoutId);
+    
+    console.log('=== WEBHOOK RESPONSE ===');
+    console.log('Response status:', response.status);
+    console.log('Response statusText:', response.statusText);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+    console.log('Response URL:', response.url);
+    console.log('Response type:', response.type);
+    console.log('Response ok:', response.ok);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Webhook failed:', response.status, response.statusText, errorText);
+      console.error('=== WEBHOOK FAILED ===');
+      console.error('Status:', response.status);
+      console.error('Status Text:', response.statusText);
+      console.error('Error Response:', errorText);
+      console.error('Response Headers:', Object.fromEntries(response.headers.entries()));
       return false;
     }
 
     const responseData = await response.text();
-    console.log('Webhook sent successfully. Response:', responseData);
+    console.log('=== WEBHOOK SUCCESS ===');
+    console.log('Response data:', responseData);
+    console.log('Response data length:', responseData.length);
+    console.log('=== WEBHOOK DEBUG END ===');
     return true;
   } catch (error) {
-    console.error('Error sending webhook:', error);
-    console.error('Error details:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    });
+    console.error('=== WEBHOOK ERROR ===');
+    console.error('Error timestamp:', timestamp);
+    console.error('Error type:', error.constructor.name);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    
+    if (error.name === 'AbortError') {
+      console.error('Request timed out after 15 seconds');
+    }
+    
+    // Log additional error details
+    if (error instanceof TypeError) {
+      console.error('Network error or CORS issue');
+    }
+    
+    console.error('=== WEBHOOK DEBUG END ===');
     return false;
   }
 };
