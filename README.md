@@ -10,44 +10,121 @@ Sistema de oráculo numerológico que gera relatórios personalizados de prosper
 - **Interface Moderna**: Design Matrix com animações e efeitos visuais
 - **Deploy Automatizado**: Stack Docker completa para produção
 
-## 🚀 Deploy em Produção
+## 🚀 Início Rápido
 
-### Domínio: www.mapadnafinanceiro.com
-
-### Pré-requisitos
-
-- VPS Ubuntu 20.04+ com acesso root
-- Domínio configurado apontando para o IP do servidor
-- Docker e Docker Compose instalados
-
-### Deploy Rápido (1 comando)
+### Instalação Local (Desenvolvimento)
 
 ```bash
-# Clone o repositório
+# 1. Clonar o repositório
 git clone https://github.com/JonasKash/mapa-dna.git
 cd mapa-dna
 
-# Execute o script de deploy
-sudo ./deploy-production.sh
+# 2. Instalar dependências
+npm install
+cd server && npm install && cd ..
+
+# 3. Configurar variáveis de ambiente
+# Criar .env na raiz com:
+echo "VITE_API_URL=http://localhost:3001" > .env
+
+# Criar server/.env com:
+echo "PORT=3001
+NODE_ENV=development
+OPENAI_API_KEY=sua_chave_aqui
+WEBHOOK_URL=sua_url_aqui
+WEBHOOK_SECRET=seu_secret_aqui
+CORS_ORIGIN=http://localhost:5173" > server/.env
+
+# 4. Executar o projeto
+# Terminal 1 - Backend:
+cd server && npm run dev
+
+# Terminal 2 - Frontend:
+npm run dev
 ```
 
-### Configuração Manual
+### Deploy com Docker (Recomendado)
 
-1. **Configurar variáveis de ambiente:**
 ```bash
-cp env.production .env
-nano .env
+# Clone e execute
+git clone https://github.com/JonasKash/mapa-dna.git
+cd mapa-dna
+
+# Configurar variáveis (opcional)
+cp env.traefik .env
+
+# Executar com Docker
+docker-compose -f docker-compose.simple.yml up -d --build
 ```
 
-2. **Configurar SSL (Let's Encrypt):**
-```bash
-certbot certonly --standalone -d www.mapadnafinanceiro.com
-cp /etc/letsencrypt/live/www.mapadnafinanceiro.com/* ssl/
+**Acesse:**
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3001
+- Health Check: http://localhost:3001/health
+
+## 📚 Documentação Completa
+
+Para instruções detalhadas de instalação, configuração e troubleshooting, consulte:
+- **[INSTRUCOES-INSTALACAO.md](./INSTRUCOES-INSTALACAO.md)** - Guia completo de instalação
+- **[DEPLOY-SIMPLES.md](./DEPLOY-SIMPLES.md)** - Guia de deploy simplificado
+
+## 🛠️ Tecnologias Utilizadas
+
+### Frontend
+- **React 18** com TypeScript
+- **Vite** para build e desenvolvimento
+- **Tailwind CSS** para estilização
+- **shadcn/ui** para componentes
+- **React Router** para navegação
+- **React Hook Form** para formulários
+
+### Backend
+- **Node.js** com Express
+- **CORS** para cross-origin requests
+- **Helmet** para segurança
+- **Rate Limiting** para proteção
+
+### Deploy
+- **Docker** e **Docker Compose**
+- **Nginx** como proxy reverso
+- **SSL/TLS** com Let's Encrypt
+
+## 📁 Estrutura do Projeto
+
+```
+mapa-dna/
+├── src/                          # Frontend React/TypeScript
+│   ├── components/               # Componentes React
+│   │   ├── steps/               # Componentes dos passos do funil
+│   │   └── ui/                  # Componentes UI (shadcn/ui)
+│   ├── contexts/                # Contextos React
+│   ├── hooks/                   # Hooks customizados
+│   ├── services/                # Serviços (API calls)
+│   └── pages/                   # Páginas da aplicação
+├── server/                      # Backend Node.js/Express
+│   ├── server.js               # Servidor principal
+│   └── package.json            # Dependências do backend
+├── public/                      # Arquivos estáticos
+├── docker-compose.simple.yml    # Configuração Docker simples
+├── Dockerfile.frontend         # Dockerfile do frontend
+├── nginx-simple.conf           # Configuração Nginx
+└── package.json                # Dependências do frontend
 ```
 
-3. **Deploy com Docker:**
+## 🔧 Scripts Disponíveis
+
+### Frontend
 ```bash
-docker-compose -f docker-compose.production.yml up -d --build
+npm run dev          # Executar em modo desenvolvimento
+npm run build        # Build para produção
+npm run preview      # Preview do build
+npm run lint         # Executar linter
+```
+
+### Backend
+```bash
+npm start            # Executar servidor
+npm run dev          # Executar com nodemon (desenvolvimento)
 ```
 
 ## 📖 Guia Detalhado de Deploy e Configuração
