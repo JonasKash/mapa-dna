@@ -1,32 +1,35 @@
+# /home/mapa-dna/Dockerfile.frontend
 # Stage 1: Build the frontend application (Vite/React)
 FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copiar package.json e package-lock.json do diretório raiz do projeto (mapa-dna/)
+# Copiar package.json e package-lock.json
 COPY package*.json ./
 
 # Instalar dependências
 RUN npm ci
 
-# Copiar código fonte do diretório raiz do projeto (mapa-dna/)
-# ATENÇÃO: Se tiver .dockerignore, certifique-se de que não exclui arquivos essenciais.
+# Copiar código fonte da aplicação
 COPY . .
 
-# Build da aplicação (assumindo que 'npm run build' cria uma pasta 'dist')
+# Build da aplicação
 RUN npm run build
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Instale curl e iputils-ping para o healthcheck e depuração
+# Instalar ferramentas para healthcheck e depuração
 RUN apk add --no-cache curl iputils-ping
 
-# Copiar configuração customizada do nginx para substituir a padrão
-COPY ./nginx-traefik.conf /etc/nginx/nginx.conf
+# Remover a configuração padrão do Nginx Alpine para evitar conflitos
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copiar a configuração customizada do Nginx para o frontend
+# AGORA APONTA PARA O ARQUIVO CORRETO!
+COPY ./nginx-frontend.conf /etc/nginx/conf.d/default.conf
 
 # Copiar arquivos buildados do estágio 'builder' para a raiz do Nginx
-# Assumindo que o build do seu Vite gera os arquivos estáticos na pasta 'dist' dentro de /app
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Expor porta 80 (porta interna do container Nginx)
