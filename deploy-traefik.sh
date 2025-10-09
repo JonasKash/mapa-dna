@@ -82,7 +82,7 @@ fi
 # Verificar se o arquivo .env existe
 if [ ! -f ".env" ]; then
     print_warning "Arquivo .env não encontrado. Criando a partir do exemplo..."
-    cp env.standalone .env
+    cp env.traefik .env
     print_warning "IMPORTANTE: Edite o arquivo .env com suas configurações antes de continuar!"
     print_warning "Especialmente: OPENAI_API_KEY, WEBHOOK_URL, WEBHOOK_SECRET"
     read -p "Pressione Enter após editar o .env..."
