@@ -119,13 +119,8 @@ log "Docker Compose instalado com sucesso: $(docker-compose --version)"
 # Passo 5: Configurar domínio
 log "Passo 5/11: Configurando domínio..."
 
-# Solicitar domínio
-read -p "Digite seu domínio (ex: lp.mapadnafinanceiro.com): " DOMAIN
-
-if [[ -z "$DOMAIN" ]]; then
-    error "Domínio é obrigatório"
-fi
-
+# Configurar domínio fixo
+DOMAIN="www.lp.mapadnafinanceiro.com"
 log "Domínio configurado: $DOMAIN"
 
 # Passo 6: Clonar projeto

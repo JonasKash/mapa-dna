@@ -87,10 +87,10 @@ mkdir -p ssl
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout ssl/cert.key \
   -out ssl/cert.pem \
-  -subj "/C=BR/ST=MG/L=Belo Horizonte/O=MapaDNA/OU=IT/CN=SEU_DOMINIO_AQUI/emailAddress=admin@SEU_DOMINIO_AQUI"
+  -subj "/C=BR/ST=MG/L=Belo Horizonte/O=MapaDNA/OU=IT/CN=www.lp.mapadnafinanceiro.com/emailAddress=admin@www.lp.mapadnafinanceiro.com"
 ```
 
-**⚠️ IMPORTANTE**: Substitua `SEU_DOMINIO_AQUI` pelo seu domínio real (ex: `lp.mapadnafinanceiro.com`)
+**⚠️ IMPORTANTE**: O domínio está configurado como `www.lp.mapadnafinanceiro.com`
 
 ### 4.3 Verificar certificados
 ```bash
@@ -117,13 +117,13 @@ NODE_ENV=production
 OPENAI_API_KEY=sua_chave_openai_aqui
 WEBHOOK_URL=https://wbn.araxa.app/webhook/mapa-dna-financeiro
 WEBHOOK_SECRET=seu_secret_webhook_aqui
-CORS_ORIGIN=https://SEU_DOMINIO_AQUI
+CORS_ORIGIN=https://www.lp.mapadnafinanceiro.com
 
 # Frontend
-VITE_API_URL=https://SEU_DOMINIO_AQUI/api
+VITE_API_URL=https://www.lp.mapadnafinanceiro.com/api
 ```
 
-**⚠️ IMPORTANTE**: Substitua `SEU_DOMINIO_AQUI` pelo seu domínio real
+**⚠️ IMPORTANTE**: O domínio está configurado como `www.lp.mapadnafinanceiro.com`
 
 ## 🏗️ Passo 6: Build e Deploy
 
@@ -168,10 +168,10 @@ docker-compose -f docker-compose.simple.yml logs -f nginx
 ### 7.2 Testar conectividade
 ```bash
 # Testar backend
-curl -k https://SEU_DOMINIO_AQUI/api/health
+curl -k https://www.lp.mapadnafinanceiro.com/api/health
 
 # Testar frontend
-curl -k https://SEU_DOMINIO_AQUI
+curl -k https://www.lp.mapadnafinanceiro.com
 ```
 
 ### 7.3 Verificar portas
@@ -294,17 +294,17 @@ tar -czf backup-$(date +%Y%m%d).tar.gz /home/mapa-dna
 ### 11.2 Teste Final
 ```bash
 # Teste completo
-curl -k -I https://SEU_DOMINIO_AQUI
-curl -k https://SEU_DOMINIO_AQUI/api/health
+curl -k -I https://www.lp.mapadnafinanceiro.com
+curl -k https://www.lp.mapadnafinanceiro.com/api/health
 ```
 
 ## 🎯 URLs de Acesso
 
 Após a instalação, sua aplicação estará disponível em:
 
-- **Frontend**: `https://SEU_DOMINIO_AQUI`
-- **API Health**: `https://SEU_DOMINIO_AQUI/api/health`
-- **API Oracle**: `https://SEU_DOMINIO_AQUI/api/oracle/generate`
+- **Frontend**: `https://www.lp.mapadnafinanceiro.com`
+- **API Health**: `https://www.lp.mapadnafinanceiro.com/api/health`
+- **API Oracle**: `https://www.lp.mapadnafinanceiro.com/api/oracle/generate`
 
 ## 📞 Suporte
 

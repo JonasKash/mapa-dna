@@ -40,16 +40,16 @@ chmod +x install-vps.sh
 
 ## 🎯 Durante a instalação:
 
-O script irá perguntar:
-- **Domínio**: Digite seu domínio (ex: `lp.mapadnafinanceiro.com`)
+O script está configurado para usar automaticamente:
+- **Domínio**: `www.lp.mapadnafinanceiro.com`
 
 ## ⏱️ Tempo estimado: 5-10 minutos
 
 ## 🔧 Após a instalação:
 
 ### URLs de acesso:
-- **Frontend**: `https://SEU_DOMINIO`
-- **API Health**: `https://SEU_DOMINIO/api/health`
+- **Frontend**: `https://www.lp.mapadnafinanceiro.com`
+- **API Health**: `https://www.lp.mapadnafinanceiro.com/api/health`
 
 ### Comandos úteis:
 ```bash
@@ -109,7 +109,7 @@ curl -fsSL https://raw.githubusercontent.com/JonasKash/mapa-dna/master/install-v
 docker-compose -f /home/mapa-dna/docker-compose.simple.yml ps
 
 # Testar conectividade
-curl -k https://SEU_DOMINIO/api/health
+curl -k https://www.lp.mapadnafinanceiro.com/api/health
 ```
 
 ## 📞 Suporte:
