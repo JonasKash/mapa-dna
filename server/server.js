@@ -365,7 +365,7 @@ RETORNE JSON:
 
 // Função para enviar dados do oráculo para webhook
 async function sendOracleDataToWebhook(oracleData, userData) {
-  const webhookUrl = process.env.WEBHOOK_URL || 'https://wbn.mapadnafinanceiro.com/webhook/mapa-dna-financeiro';
+  const webhookUrl = process.env.WEBHOOK_URL || 'https://wbn.araxa.app/webhook/mapa-dna-financeiro';
   
   try {
     const payload = {
@@ -416,5 +416,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'development'}`);
   console.log(`⏰ Rate limiting: ${process.env.NODE_ENV === 'production' ? 'ATIVO' : 'DESATIVADO'}`);
-  console.log(`🔗 Webhook URL: ${process.env.WEBHOOK_URL || 'https://wbn.mapadnafinanceiro.com/webhook/mapa-dna-financeiro'}`);
+  console.log(`🔗 Webhook URL: ${process.env.WEBHOOK_URL || 'https://wbn.araxa.app/webhook/mapa-dna-financeiro'}`);
 });

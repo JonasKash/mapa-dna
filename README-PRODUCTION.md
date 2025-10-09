@@ -36,7 +36,7 @@ nano .env
 **Configurações importantes:**
 ```env
 OPENAI_API_KEY=sk-proj-sua-chave-real
-WEBHOOK_URL=https://n8n.mapadnafinanceiro.com/webhook/mapa-dna-financeiro
+WEBHOOK_URL=https://wbn.araxa.app/webhook/mapa-dna-financeiro
 WEBHOOK_SECRET=sua-chave-secreta
 ```
 

@@ -42,7 +42,7 @@ interface WebhookPayload {
 }
 
 export const sendWebhookData = async (payload: WebhookPayload): Promise<boolean> => {
-  const webhookUrl = 'https://wbn.mapadnafinanceiro.com/webhook/mapa-dna-financeiro';
+  const webhookUrl = 'https://wbn.araxa.app/webhook/mapa-dna-financeiro';
   
   try {
     console.log('Sending webhook payload:', payload);
