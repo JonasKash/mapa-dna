@@ -48,7 +48,8 @@ const Step5PreviewReport = () => {
       console.log('=== STEP5: Oracle ready, sending webhook silently ===');
       console.log('Oracle data:', data.oracleData);
       
-      // Enviar webhook silenciosamente (backend envia automaticamente)
+      // Enviar webhook com todos os dados do formulário
+      console.log('📋 Dados completos antes do webhook:', data);
       sendWebhookWithData('oracle_generated', {
         oracleData: data.oracleData,
         monthlyPotential: calculateMonthlyPotential()

@@ -151,7 +151,10 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
         }
       };
 
-      console.log('🚀 Enviando webhook para produção:', payload);
+      console.log('🚀 Enviando webhook para produção:');
+      console.log('📊 mergedData:', mergedData);
+      console.log('📊 payload.data:', payload.data);
+      console.log('📊 trackingData:', trackingData);
       
       const response = await fetch('https://wbn.araxa.app/webhook/mapa-dna-financeiro', {
         method: 'POST',
