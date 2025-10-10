@@ -115,25 +115,8 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     console.log('Tracking data available:', !!trackingData);
     console.log('Tracking data:', trackingData);
     
-    if (!trackingData) {
-      console.error('❌ Tracking data not available - webhook will not be sent');
-      console.error('This usually means the useTracking hook has not initialized yet');
-      return false;
-    }
-
-    // Force a small delay to ensure state is updated
-    await new Promise(resolve => setTimeout(resolve, 50));
-
-    const payload = createWebhookPayload(data, trackingData, eventType);
-    console.log('✅ Created webhook payload:', payload);
-    console.log('Payload keys:', Object.keys(payload));
-    console.log('Payload event_type:', payload.event_type);
-    console.log('Payload user_id:', payload.user_id);
-    console.log('Payload session_id:', payload.session_id);
-    
-    const result = await sendWebhookData(payload);
-    console.log('Webhook send result:', result);
-    return result;
+    console.log('📡 Webhook será enviado automaticamente pelo backend');
+    return true; // Backend envia automaticamente
   }, [data, trackingData]);
 
   const sendWebhookWithData = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated', customData?: Partial<FunnelData>): Promise<boolean> => {
@@ -146,30 +129,8 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     console.log('Tracking data available:', !!trackingData);
     console.log('Tracking data:', trackingData);
     
-    if (!trackingData) {
-      console.error('❌ Tracking data not available - webhook will not be sent');
-      console.error('This usually means the useTracking hook has not initialized yet');
-      return false;
-    }
-
-    // Merge current data with custom data
-    const mergedData = { ...data, ...customData };
-    console.log('✅ Merged data for webhook:', mergedData);
-    console.log('Merged data keys:', Object.keys(mergedData));
-    console.log('Has oracle data:', !!mergedData.oracleData);
-    console.log('Has monthly potential:', !!mergedData.monthlyPotential);
-
-    const payload = createWebhookPayload(mergedData, trackingData, eventType);
-    console.log('✅ Created webhook payload with custom data:', payload);
-    console.log('Payload keys:', Object.keys(payload));
-    console.log('Payload event_type:', payload.event_type);
-    console.log('Payload user_id:', payload.user_id);
-    console.log('Payload session_id:', payload.session_id);
-    console.log('Payload has oracle_data:', !!payload.oracle_data);
-    
-    const result = await sendWebhookData(payload);
-    console.log('Webhook send result:', result);
-    return result;
+    console.log('📡 Webhook será enviado automaticamente pelo backend');
+    return true; // Backend envia automaticamente
   }, [data, trackingData]);
 
   const generateOracle = useCallback(async () => {

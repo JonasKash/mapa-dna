@@ -17,9 +17,9 @@ services:
     environment:
       - PORT=3002
       - NODE_ENV=production
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - WEBHOOK_URL=https://wbn.araxa.app/webhook/mapa-dna-financeiro
-      - CORS_ORIGIN=https://www.lp.mapadnafinanceiro.com
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - WEBHOOK_URL=${WEBHOOK_URL:-https://wbn.araxa.app/webhook/mapa-dna-financeiro}
+      - CORS_ORIGIN=${CORS_ORIGIN:-https://www.lp.mapadnafinanceiro.com}
     networks:
       - app-network
 

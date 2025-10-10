@@ -173,57 +173,7 @@ app.post('/api/rate-limit/reset', (req, res) => {
   res.json({ message: 'Rate limit resetado com sucesso' });
 });
 
-// Rota para enviar webhook via backend (evita CORS)
-app.post('/api/webhook/send', async (req, res) => {
-  try {
-    const { webhookUrl, payload } = req.body;
-    
-    console.log('=== BACKEND WEBHOOK PROXY START ===');
-    console.log('Webhook URL:', webhookUrl);
-    console.log('Payload size:', JSON.stringify(payload).length, 'bytes');
-    console.log('Full payload:', JSON.stringify(payload, null, 2));
-    
-    if (!webhookUrl || !payload) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'webhookUrl and payload are required' 
-      });
-    }
-    
-    const response = await axios.post(webhookUrl, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'MapaDNA-Backend-Proxy/1.0',
-      },
-      timeout: 15000
-    });
-    
-    console.log('=== BACKEND WEBHOOK PROXY SUCCESS ===');
-    console.log('Response status:', response.status);
-    console.log('Response data:', response.data);
-    
-    res.json({ 
-      success: true, 
-      status: response.status,
-      data: response.data 
-    });
-  } catch (error) {
-    console.error('=== BACKEND WEBHOOK PROXY ERROR ===');
-    console.error('Error type:', error.constructor.name);
-    console.error('Error message:', error.message);
-    
-    if (error.response) {
-      console.error('Response status:', error.response.status);
-      console.error('Response data:', error.response.data);
-    }
-    
-    res.status(500).json({ 
-      success: false, 
-      error: error.message,
-      details: error.response?.data || 'No response data'
-    });
-  }
-});
+// Rota removida - webhook agora é enviado automaticamente no /api/oracle/generate
 
 // Endpoint principal para gerar oráculo
 app.post('/api/oracle/generate', async (req, res) => {
@@ -399,7 +349,7 @@ RETORNE JSON:
     console.log('📊 Tempo total:', Date.now() - startTime, 'ms');
     console.log('🔄 Fallback usado:', usedFallback);
 
-    // Enviar dados para webhook (assíncrono)
+    // Enviar dados para webhook automaticamente (assíncrono)
     sendOracleDataToWebhook(finalResponse, data).catch(error => {
       console.error('❌ Erro ao enviar webhook:', error.message);
     });

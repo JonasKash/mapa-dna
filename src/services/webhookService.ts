@@ -41,150 +41,15 @@ interface WebhookPayload {
   event_type: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated';
 }
 
+// Webhook agora é enviado automaticamente pelo backend
+// Esta função foi simplificada para apenas retornar true
 export const sendWebhookData = async (payload: WebhookPayload): Promise<boolean> => {
-  const webhookUrl = 'https://wbn.araxa.app/webhook/mapa-dna-financeiro';
-  const backendUrl = '/api/webhook/send'; // Enviar via backend para evitar CORS
-  const timestamp = new Date().toISOString();
-  
-  try {
-    console.log('=== WEBHOOK DEBUG START ===');
-    console.log('Timestamp:', timestamp);
-    console.log('Webhook URL:', webhookUrl);
-    console.log('Backend URL:', backendUrl);
-    console.log('Payload size:', JSON.stringify(payload).length, 'bytes');
-    console.log('Full payload:', JSON.stringify(payload, null, 2));
-    
-    // Primeiro, tentar enviar via backend (evita CORS)
-    console.log('🚀 Attempting to send webhook via backend...');
-    
-    const backendPayload = {
-      webhookUrl: webhookUrl,
-      payload: payload
-    };
-    
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-    
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'User-Agent': 'MapaDNA-Frontend/1.0',
-      },
-      body: JSON.stringify(backendPayload),
-      mode: 'cors' as RequestMode,
-      signal: controller.signal,
-    };
-    
-    console.log('Backend request options:', {
-      method: requestOptions.method,
-      headers: requestOptions.headers,
-      mode: requestOptions.mode,
-      bodyLength: requestOptions.body.length
-    });
-    
-    const response = await fetch(backendUrl, requestOptions);
-    clearTimeout(timeoutId);
-    
-    console.log('=== BACKEND WEBHOOK RESPONSE ===');
-    console.log('Response status:', response.status);
-    console.log('Response statusText:', response.statusText);
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-    console.log('Response URL:', response.url);
-    console.log('Response type:', response.type);
-    console.log('Response ok:', response.ok);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('=== BACKEND WEBHOOK FAILED ===');
-      console.error('Status:', response.status);
-      console.error('Status Text:', response.statusText);
-      console.error('Error Response:', errorText);
-      console.error('Response Headers:', Object.fromEntries(response.headers.entries()));
-      
-      // Se o backend falhar, tentar direto (fallback)
-      console.log('🔄 Backend failed, trying direct webhook as fallback...');
-      return await sendWebhookDirect(payload, webhookUrl, timestamp);
-    }
-
-    const responseData = await response.text();
-    console.log('=== BACKEND WEBHOOK SUCCESS ===');
-    console.log('Response data:', responseData);
-    console.log('Response data length:', responseData.length);
-    console.log('=== WEBHOOK DEBUG END ===');
-    return true;
-  } catch (error) {
-    console.error('=== BACKEND WEBHOOK ERROR ===');
-    console.error('Error timestamp:', timestamp);
-    console.error('Error type:', error.constructor.name);
-    console.error('Error name:', error.name);
-    console.error('Error message:', error.message);
-    console.error('Error stack:', error.stack);
-    
-    if (error.name === 'AbortError') {
-      console.error('Request timed out after 15 seconds');
-    }
-    
-    // Se o backend falhar, tentar direto (fallback)
-    console.log('🔄 Backend error, trying direct webhook as fallback...');
-    return await sendWebhookDirect(payload, webhookUrl, timestamp);
-  }
+  console.log('📡 Webhook será enviado automaticamente pelo backend');
+  console.log('📊 Payload size:', JSON.stringify(payload).length, 'bytes');
+  return true; // Backend envia automaticamente
 };
 
-// Função auxiliar para tentar envio direto (fallback)
-const sendWebhookDirect = async (payload: WebhookPayload, webhookUrl: string, timestamp: string): Promise<boolean> => {
-  try {
-    console.log('=== DIRECT WEBHOOK FALLBACK ===');
-    
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout para fallback
-    
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'User-Agent': 'MapaDNA-Frontend/1.0',
-      },
-      body: JSON.stringify(payload),
-      mode: 'cors' as RequestMode,
-      signal: controller.signal,
-    };
-    
-    const response = await fetch(webhookUrl, requestOptions);
-    clearTimeout(timeoutId);
-    
-    console.log('=== DIRECT WEBHOOK RESPONSE ===');
-    console.log('Response status:', response.status);
-    console.log('Response ok:', response.ok);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('=== DIRECT WEBHOOK FAILED ===');
-      console.error('Status:', response.status);
-      console.error('Error Response:', errorText);
-      return false;
-    }
-
-    const responseData = await response.text();
-    console.log('=== DIRECT WEBHOOK SUCCESS ===');
-    console.log('Response data:', responseData);
-    return true;
-  } catch (error) {
-    console.error('=== DIRECT WEBHOOK ERROR ===');
-    console.error('Error type:', error.constructor.name);
-    console.error('Error name:', error.name);
-    console.error('Error message:', error.message);
-    
-    if (error instanceof TypeError && error.message.includes('CORS')) {
-      console.error('❌ CORS error confirmed - webhook blocked by browser');
-    }
-    
-    console.error('=== WEBHOOK DEBUG END ===');
-    return false;
-  }
-};
+// Função removida - webhook agora é enviado automaticamente pelo backend
 
 export const createWebhookPayload = (
   funnelData: any,
