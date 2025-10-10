@@ -21,6 +21,18 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    port: 4173,
+    host: true,
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'lp.mapadnafinanceiro.com',
+      'www.lp.mapadnafinanceiro.com',
+      'mapadnafinanceiro.com',
+      'www.mapadnafinanceiro.com'
+    ]
+  },
   build: {
     outDir: 'dist',
     sourcemap: true,

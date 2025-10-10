@@ -9,10 +9,10 @@ NC='\033[0m' # No Color
 
 # Configurações
 DOMAIN="www.lp.mapadnafinanceiro.com"
-CLOUDFLARE_TOKEN="fWAO2YEzMNdv8r3siQRddHvE_-Ocy1HA15eUanTa"
 EMAIL="admin@mapadnafinanceiro.com"
 
-echo -e "${BLUE}🚀 Iniciando deploy do Mapa da Grana...${NC}"
+echo -e "${BLUE}🚀 DEPLOY SIMPLES - Mapa DNA Financeiro${NC}"
+echo -e "${YELLOW}📋 Configuração automática com HTTPS${NC}"
 
 # Função para verificar se comando existe
 command_exists() {
@@ -45,8 +45,8 @@ docker-compose down 2>/dev/null || true
 echo -e "${YELLOW}🔐 Configurando SSL...${NC}"
 mkdir -p ssl
 
-# Gerar certificado SSL auto-assinado (temporário)
-echo -e "${YELLOW}📜 Gerando certificado SSL temporário...${NC}"
+# Gerar certificado SSL auto-assinado
+echo -e "${YELLOW}📜 Gerando certificado SSL...${NC}"
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout ssl/cert.key \
     -out ssl/cert.pem \
@@ -77,7 +77,6 @@ fi
 
 # Build e start dos containers
 echo -e "${YELLOW}🏗️  Construindo e iniciando containers...${NC}"
-docker-compose down 2>/dev/null || true
 docker-compose build --no-cache
 docker-compose up -d
 
@@ -105,12 +104,6 @@ if curl -s -k -o /dev/null -w "%{http_code}" https://localhost | grep -q "200\|3
     echo -e "${GREEN}✅ HTTPS funcionando${NC}"
 else
     echo -e "${RED}❌ HTTPS não está funcionando${NC}"
-fi
-
-# Mostrar logs se houver erro
-if ! docker-compose ps | grep -q "Up"; then
-    echo -e "${RED}❌ Alguns containers não estão rodando. Verificando logs...${NC}"
-    docker-compose logs
 fi
 
 echo -e "${GREEN}🎉 Deploy concluído!${NC}"
