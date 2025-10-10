@@ -8,7 +8,6 @@ import Step4DataCollection from '@/components/steps/Step4DataCollection';
 import Step5PreviewReport from '@/components/steps/Step5PreviewReport';
 import Step6Payment from '@/components/steps/Step6Payment';
 import Step7Upsell from '@/components/steps/Step7Upsell';
-import WebhookTest from '@/components/WebhookTest';
 
 const FunnelContent = () => {
   const { data } = useFunnel();
@@ -41,8 +40,6 @@ const FunnelContent = () => {
       <div className="relative z-10 pt-20">
         {renderStep()}
       </div>
-      {/* Webhook Test Component - Only visible in development */}
-      {process.env.NODE_ENV === 'development' && <WebhookTest />}
     </>
   );
 };

@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 const Step5PreviewReport = () => {
   const { data, nextStep, calculateMonthlyPotential, generateOracle, sendWebhookWithData } = useFunnel();
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
-  const [webhookStatus, setWebhookStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   // Função para dividir o texto da revelação em seções
   const parseRevelationText = (text: string) => {
@@ -43,32 +42,19 @@ const Step5PreviewReport = () => {
     }
   }, [data.name, data.birthDate, data.oracleData, data.isGeneratingOracle, generateOracle]);
 
-  // Enviar webhook quando o oráculo estiver pronto
+  // Enviar webhook quando o oráculo estiver pronto (silencioso)
   useEffect(() => {
-    if (data.oracleData && !data.isGeneratingOracle && webhookStatus === 'idle') {
-      console.log('=== STEP5: Oracle ready, sending webhook ===');
+    if (data.oracleData && !data.isGeneratingOracle) {
+      console.log('=== STEP5: Oracle ready, sending webhook silently ===');
       console.log('Oracle data:', data.oracleData);
       
-      setWebhookStatus('sending');
-      
-      // Enviar webhook com todos os dados + resultado do oráculo
+      // Enviar webhook silenciosamente (backend envia automaticamente)
       sendWebhookWithData('oracle_generated', {
         oracleData: data.oracleData,
         monthlyPotential: calculateMonthlyPotential()
-      }).then(success => {
-        if (success) {
-          console.log('✅ Webhook sent successfully with oracle data');
-          setWebhookStatus('success');
-        } else {
-          console.error('❌ Failed to send webhook with oracle data');
-          setWebhookStatus('error');
-        }
-      }).catch(error => {
-        console.error('❌ Error sending webhook with oracle data:', error);
-        setWebhookStatus('error');
       });
     }
-  }, [data.oracleData, data.isGeneratingOracle, sendWebhookWithData, calculateMonthlyPotential, webhookStatus]);
+  }, [data.oracleData, data.isGeneratingOracle, sendWebhookWithData, calculateMonthlyPotential]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -134,31 +120,6 @@ const Step5PreviewReport = () => {
           </div>
         ) : data.oracleData ? (
           <>
-            {/* Webhook Status Indicator */}
-            {webhookStatus !== 'idle' && (
-              <div className="bg-card border-2 border-primary rounded-lg p-4 mb-4">
-                <div className="flex items-center justify-center gap-3">
-                  {webhookStatus === 'sending' && (
-                    <>
-                      <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
-                      <span className="text-sm font-orbitron text-primary">Enviando dados para o sistema...</span>
-                    </>
-                  )}
-                  {webhookStatus === 'success' && (
-                    <>
-                      <span className="text-green-500 text-xl">✅</span>
-                      <span className="text-sm font-orbitron text-green-500">Dados enviados com sucesso!</span>
-                    </>
-                  )}
-                  {webhookStatus === 'error' && (
-                    <>
-                      <span className="text-red-500 text-xl">❌</span>
-                      <span className="text-sm font-orbitron text-red-500">Erro ao enviar dados</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
 
             <div className="bg-card border-2 border-primary rounded-lg p-6 space-y-6 matrix-border">
               <div className="text-center">
