@@ -77,18 +77,6 @@ const Step5PreviewReport = () => {
     <div className="min-h-screen flex items-center justify-center p-4 py-12">
       <div className="max-w-3xl w-full space-y-8 animate-fade-in-up">
         <div className="text-center space-y-4">
-          <div className="inline-block px-6 py-3 bg-accent/20 border-2 border-accent rounded-lg neon-purple-glow">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">⏰</span>
-              <div className="text-left">
-                <p className="text-xs text-accent font-orbitron">OFERTA EXPIRA EM:</p>
-                <p className="text-2xl font-orbitron text-accent">
-                  {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
-                </p>
-              </div>
-            </div>
-          </div>
-          
           <h2 className="text-2xl md:text-3xl font-orbitron font-bold text-primary matrix-glow leading-tight">
             🔑 DECODIFICADO<br /> 
           </h2>
@@ -213,6 +201,20 @@ const Step5PreviewReport = () => {
 
         {data.oracleData && (
           <>
+            <div className="text-center">
+              <div className="inline-block px-6 py-3 bg-accent/20 border-2 border-accent rounded-lg neon-purple-glow">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">⏰</span>
+                  <div className="text-left">
+                    <p className="text-xs text-accent font-orbitron">OFERTA EXPIRA EM:</p>
+                    <p className="text-2xl font-orbitron text-accent">
+                      {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-muted/30 backdrop-blur-sm border-2 border-primary/50 rounded-lg p-5 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-pulse" />
               <div className="relative z-10 space-y-3">
