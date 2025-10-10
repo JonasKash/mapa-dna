@@ -77,6 +77,7 @@ fi
 
 # Build e start dos containers
 echo -e "${YELLOW}🏗️  Construindo e iniciando containers...${NC}"
+docker-compose down 2>/dev/null || true
 docker-compose build --no-cache
 docker-compose up -d
 
