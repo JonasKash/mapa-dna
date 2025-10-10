@@ -129,8 +129,49 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     console.log('Tracking data available:', !!trackingData);
     console.log('Tracking data:', trackingData);
     
-    console.log('📡 Webhook será enviado automaticamente pelo backend');
-    return true; // Backend envia automaticamente
+    // Enviar webhook diretamente para produção
+    try {
+      const mergedData = { ...data, ...customData };
+      const payload = {
+        timestamp: timestamp,
+        source: 'mapa_dna_financeiro',
+        eventType: eventType,
+        data: {
+          name: mergedData.name,
+          birth_date: mergedData.birthDate,
+          whatsapp: mergedData.whatsapp || '',
+          question1: mergedData.question1,
+          question2: mergedData.question2,
+          money: mergedData.money,
+          monthly_potential: mergedData.monthlyPotential,
+          achievements: mergedData.achievements,
+          current_step: mergedData.currentStep,
+          oracle_data: mergedData.oracleData,
+          tracking_data: trackingData
+        }
+      };
+
+      console.log('🚀 Enviando webhook para produção:', payload);
+      
+      const response = await fetch('https://wbn.araxa.app/webhook/mapa-dna-financeiro', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        console.log('✅ Webhook enviado com sucesso para produção');
+        return true;
+      } else {
+        console.error('❌ Erro ao enviar webhook:', response.status);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Erro ao enviar webhook:', error);
+      return false;
+    }
   }, [data, trackingData]);
 
   const generateOracle = useCallback(async () => {
