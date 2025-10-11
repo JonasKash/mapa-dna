@@ -228,12 +228,10 @@ const Step5PreviewReport = () => {
           <div className="space-y-2 text-sm text-foreground">
             <p className="font-bold text-center text-lg">🚀 NO RELATÓRIO COMPLETO, você terá acesso a:</p>
             <ul className="space-y-1 text-xs">
-              <li>✅ 15 Números de Poder Personalizados + Aplicações Financeiras!</li>
-              <li>✅ Mapa para Alcançar Seus Primeiros R$ 10.000! Usando a sua numerologia</li>
-              <li>✅ Estratégias Específicas para Seu Perfil Numerológico!</li>
-              <li>✅ Métodos de Multiplicação de Renda por Arquétipo!</li>
-              <li>✅ Como Superar Bloqueios Energético-Financeiros!</li>
-              <li>✅ Plano de Escape do CLT em 6 Meses</li>
+              <li>✅ O Mapa que vai te levar direto aos seus PRIMEIROS R$ 10.000 — sem enrolação!</li>
+              <li>✅ Estratégias PERIGOSAMENTE EFICAZES que vão te DESPRENDER da CLT em apenas 6 meses!</li>
+              <li>✅ Métodos INFALÍVEIS para multiplicar sua Renda — você vai ver seu dinheiro SE DUPLICAR!</li>
+              <li>✅ Como EXPLODIR todos os bloqueios que te mantêm na MISÉRIA e fazer sua vida prosperar como nunca!</li>
             </ul>
           </div>
 
