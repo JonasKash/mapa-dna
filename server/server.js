@@ -159,14 +159,164 @@ const generateArtificialResponse = (data, numerology) => {
 
   const strategy = responses[data.question1] || "Desenvolvimento de habilidades de alto valor e criação de múltiplas fontes de renda";
 
+  // Gerar resposta baseada no prompt do Oráculo da Prosperidade
+  const name = data.name.split(' ')[0];
+  const age = new Date().getFullYear() - new Date(data.birthDate).getFullYear();
+  
+  // Variações de linguagem mística
+  const mysticalOpenings = [
+    "Vejo em sua matriz energética",
+    "Sua frequência nominal carrega", 
+    "A assinatura temporal do seu nascimento revela",
+    "As forças invisíveis que habitam seu nome",
+    "Percebo em sua vibração fundamental",
+    "Sua essência numerológica pulsa com",
+    "A geometria sagrada de sua existência",
+    "Os ecos do seu nome no cosmos"
+  ];
+  
+  const energyWords = [
+    "vibração", "frequência", "assinatura", "matriz", "essência", "pulsação", "resonância", "harmonia"
+  ];
+  
+  const opening = mysticalOpenings[Math.floor(Math.random() * mysticalOpenings.length)];
+  const energyWord = energyWords[Math.floor(Math.random() * energyWords.length)];
+  
+  // Gerar revelação personalizada
+  const revelacao = generatePersonalizedRevelation(data, numerology, archetype, name, age, opening, energyWord);
+
   return {
-    revelacao: `${data.name}, sua essência única vibra no número ${numerology.finalNumber}, despertando o ${archetype.name} que habita em você.`,
+    revelacao: revelacao,
     arquetipo: archetype.name,
     essencia: archetype.essence,
     obstaculo: obstacle,
     acao_imediata: "Nos próximos 7 dias, escolha UMA ação específica e execute sem perfeicionismo",
     numero_final: numerology.finalNumber
   };
+};
+
+// Função para gerar revelação personalizada seguindo o prompt
+const generatePersonalizedRevelation = (data, numerology, archetype, name, age, opening, energyWord) => {
+  // 1. ABERTURA MÍSTICA
+  const openingLines = [
+    `${name}, ${opening} uma ${energyWord} que oscila entre a necessidade de controle e o desejo profundo de liberdade total.`,
+    `${name}, ${opening} o peso de responsabilidades que você carrega desde jovem, e o brilho da liberdade que você ainda não permitiu existir.`,
+    `${name}, ${opening} uma contradição poderosa: a necessidade de segurança que você expressa e a sede de aventura que pulsa em sua ${energyWord}.`,
+    `${name}, ${opening} uma ${energyWord} que ${getRandomVerb()} além do que seus olhos físicos podem ver.`
+  ];
+  
+  const openingText = openingLines[Math.floor(Math.random() * openingLines.length)];
+
+  // 2. ARQUÉTIPO REVELADO
+  const archetypeText = `${name}, sua resposta sobre ${data.question1} confirma o que já estava inscrito: você é o ${archetype.name}.`;
+
+  // 3. TALENTOS JÁ ATIVOS
+  const talents = getTalentsForArchetype(archetype.name);
+  const talentsText = talents.map(talent => `Já existe em você ${talent}`).join('\n');
+
+  // 4. CAMINHO DOURADO
+  const goldenPath = getGoldenPathForArchetype(archetype.name, data);
+
+  // 5. POSSIBILIDADES ENERGÉTICAS
+  const possibilities = getPossibilitiesForAge(age, data);
+
+  // 6. OBSTÁCULO INVISÍVEL
+  const obstacle = getObstacleForArchetype(archetype.name, data);
+
+  // 7. PRÓXIMO MOVIMENTO
+  const nextMove = getNextMoveForArchetype(archetype.name);
+
+  // 8. ENCERRAMENTO
+  const closing = getClosingForName(name, archetype.name);
+
+  return `${openingText}\n\n${archetypeText}\n\n${talentsText}\n\n${goldenPath}\n\n${possibilities}\n\n${obstacle}\n\n${nextMove}\n\n${closing}`;
+};
+
+// Funções auxiliares
+const getRandomVerb = () => {
+  const verbs = ["vejo", "percebo", "sinto", "leio", "decodifico", "revelo", "desvelo", "capto"];
+  return verbs[Math.floor(Math.random() * verbs.length)];
+};
+
+const getTalentsForArchetype = (archetypeName) => {
+  const talentsMap = {
+    "Arquiteto da Abundância": [
+      "a capacidade de inspirar outros sem esforço",
+      "o dom de ver soluções onde outros veem problemas", 
+      "a habilidade natural de transformar ideias em ações"
+    ],
+    "Visionário das Oportunidades": [
+      "a sensibilidade para captar oportunidades antes que se manifestem",
+      "o dom de ler as necessidades não expressas das pessoas",
+      "a capacidade de sentir o momento certo para agir"
+    ],
+    "Alquimista da Palavra": [
+      "o poder de transformar conceitos complexos em mensagens simples",
+      "a habilidade de conectar pessoas através de suas palavras",
+      "o dom de criar pontes entre mundos diferentes"
+    ],
+    "Curador da Transformação": [
+      "a capacidade de organizar o caos em sistemas funcionais",
+      "o dom de construir bases sólidas para qualquer projeto",
+      "a habilidade de transformar sonhos em planos executáveis"
+    ]
+  };
+  
+  return talentsMap[archetypeName] || talentsMap["Arquiteto da Abundância"];
+};
+
+const getGoldenPathForArchetype = (archetypeName, data) => {
+  const paths = {
+    "Arquiteto da Abundância": "Sua energia se manifesta através de sistemas que funcionam sem você. Crie um produto digital que você vende enquanto dorme, ou construa uma equipe que executa sua visão.",
+    "Visionário das Oportunidades": "Sua intuição é seu maior ativo financeiro. Desenvolva um serviço de consultoria baseado em sua percepção única, ou invista em ativos que você 'sente' que vão valorizar.",
+    "Alquimista da Palavra": "Sua palavra tem poder de transformação. Crie conteúdo que ensina o que você sabe, ou desenvolva um curso online que monetiza seu conhecimento.",
+    "Curador da Transformação": "Sua energia se manifesta através de sistemas organizados. Desenvolva um negócio escalável com processos claros, ou invista em ativos que geram renda passiva através de estruturas sólidas."
+  };
+  
+  return paths[archetypeName] || paths["Arquiteto da Abundância"];
+};
+
+const getPossibilitiesForAge = (age, data) => {
+  const baseAmount = data.question2 ? parseInt(data.question2.replace(/\D/g, '')) : 5000;
+  const multiplier = age < 25 ? 0.3 : age < 35 ? 0.5 : 0.7;
+  
+  const amount30 = Math.round(baseAmount * multiplier * 0.1);
+  const amount90 = Math.round(baseAmount * multiplier * 0.3);
+  
+  return `Energeticamente, vejo possibilidade de R$ ${amount30} em 30 dias, R$ ${amount90} em 90 dias, se você seguir o caminho que sua essência indica.`;
+};
+
+const getObstacleForArchetype = (archetypeName, data) => {
+  const obstacles = {
+    "Arquiteto da Abundância": "Mas vejo uma contradição: você quer liberdade total, mas ainda busca aprovação externa para suas decisões.",
+    "Visionário das Oportunidades": "Porém, percebo um bloqueio: sua intuição está sendo sufocada pela necessidade de 'provas' antes de agir.",
+    "Alquimista da Palavra": "Contudo, sinto uma resistência: você tem medo de ser julgado por suas ideias, então prefere ficar na zona de conforto.",
+    "Curador da Transformação": "Mas vejo uma contradição: você quer resultados rápidos, mas tem medo de assumir riscos calculados."
+  };
+  
+  return obstacles[archetypeName] || obstacles["Arquiteto da Abundância"];
+};
+
+const getNextMoveForArchetype = (archetypeName) => {
+  const actions = {
+    "Arquiteto da Abundância": "Nos próximos 7 dias, escolha 3 pessoas para compartilhar uma ideia que você tem guardada e peça feedback específico.",
+    "Visionário das Oportunidades": "Nos próximos 7 dias, faça 5 anotações sobre 'sensações' que você teve sobre oportunidades e verifique se se concretizaram.",
+    "Alquimista da Palavra": "Nos próximos 7 dias, crie 3 conteúdos sobre algo que você domina e publique em uma rede social.",
+    "Curador da Transformação": "Nos próximos 7 dias, organize um projeto que está parado há mais de 30 dias e defina 3 passos concretos para executá-lo."
+  };
+  
+  return actions[archetypeName] || actions["Arquiteto da Abundância"];
+};
+
+const getClosingForName = (name, archetypeName) => {
+  const closings = [
+    `${name}, sua essência de ${archetypeName} está pronta para se manifestar - permita-se receber.`,
+    `${name}, o ${archetypeName} que habita em você está aguardando sua permissão para transformar sua realidade.`,
+    `${name}, sua vibração de ${archetypeName} está alinhada com a abundância - confie no processo.`,
+    `${name}, o ${archetypeName} que você carrega está destinado a prosperar - aceite sua missão.`
+  ];
+  
+  return closings[Math.floor(Math.random() * closings.length)];
 };
 
 // Função para obter resposta de fallback
