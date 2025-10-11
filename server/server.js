@@ -18,22 +18,52 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Rate limiting (temporariamente desabilitado para desenvolvimento)
-const limiter = rateLimit({
+// Rate limiting geral (mais restritivo)
+const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 50, // Aumentado para testes
+  max: 20, // Reduzido para evitar spam
   message: {
     error: 'Muitas tentativas. Tente novamente em 15 minutos.',
     retryAfter: 900
   },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Pular rate limiting para health checks
+    return req.path === '/health' || req.path === '/api/health';
+  }
 });
 
-// Aplicar rate limiting apenas em produção
-if (process.env.NODE_ENV === 'production') {
-  app.use('/api/', limiter);
-}
+// Rate limiting específico para geração de oráculo (muito mais restritivo)
+const oracleLimiter = rateLimit({
+  windowMs: 3 * 60 * 60 * 1000, // 3 horas
+  max: 3, // Máximo 3 tentativas por 3 horas por IP
+  message: {
+    error: 'Limite de consultas excedido. Você pode fazer apenas 3 consultas por 3 horas.',
+    retryAfter: 10800, // 3 horas em segundos
+    limit: 3,
+    remaining: 0
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    // Usar IP + User-Agent para identificar melhor o usuário
+    const ip = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('User-Agent') || '';
+    return `${ip}-${userAgent.substring(0, 50)}`;
+  },
+  onLimitReached: (req, res, options) => {
+    console.log(`🚫 Rate limit atingido para IP: ${req.ip}`);
+    console.log(`📊 User-Agent: ${req.get('User-Agent')}`);
+    console.log(`⏰ Próxima tentativa permitida em: ${new Date(Date.now() + options.windowMs).toISOString()}`);
+  }
+});
+
+// Aplicar rate limiting geral sempre
+app.use('/api/', generalLimiter);
+
+// Aplicar rate limiting específico para oráculo sempre
+app.use('/api/oracle/generate', oracleLimiter);
 
 // Verificar configuração
 if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'sk-proj-test-key') {
@@ -173,12 +203,39 @@ app.post('/api/rate-limit/reset', (req, res) => {
   res.json({ message: 'Rate limit resetado com sucesso' });
 });
 
+// Status do rate limiting
+app.get('/api/rate-limit/status', (req, res) => {
+  const clientIP = req.ip || req.connection.remoteAddress;
+  res.json({
+    ip: clientIP,
+    userAgent: req.get('User-Agent'),
+    timestamp: new Date().toISOString(),
+    limits: {
+      general: {
+        windowMs: 15 * 60 * 1000,
+        max: 20,
+        description: '20 requisições por 15 minutos'
+      },
+      oracle: {
+        windowMs: 3 * 60 * 60 * 1000,
+        max: 3,
+        description: '3 consultas de oráculo por 3 horas'
+      }
+    }
+  });
+});
+
 // Rota removida - webhook agora é enviado automaticamente no /api/oracle/generate
 
 // Endpoint principal para gerar oráculo
 app.post('/api/oracle/generate', async (req, res) => {
   const startTime = Date.now();
+  const clientIP = req.ip || req.connection.remoteAddress;
+  const userAgent = req.get('User-Agent') || 'Unknown';
+  
   console.log('🔮 Nova solicitação de oráculo recebida');
+  console.log(`🌐 IP: ${clientIP}`);
+  console.log(`📱 User-Agent: ${userAgent}`);
   console.log('📊 Dados recebidos:', JSON.stringify(req.body, null, 2));
 
   try {
@@ -348,6 +405,7 @@ RETORNE JSON:
     console.log('🎯 Resposta final preparada');
     console.log('📊 Tempo total:', Date.now() - startTime, 'ms');
     console.log('🔄 Fallback usado:', usedFallback);
+    console.log(`✅ Oráculo entregue para IP: ${clientIP}`);
 
     // Enviar dados para webhook automaticamente (assíncrono)
     sendOracleDataToWebhook(finalResponse, data).catch(error => {
@@ -448,6 +506,7 @@ async function sendOracleDataToWebhook(oracleData, userData) {
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`⏰ Rate limiting: ${process.env.NODE_ENV === 'production' ? 'ATIVO' : 'DESATIVADO'}`);
+  console.log(`⏰ Rate limiting geral: ATIVO (20 req/15min)`);
+  console.log(`🔮 Rate limiting oráculo: ATIVO (3 req/3h)`);
   console.log(`🔗 Webhook URL: ${process.env.WEBHOOK_URL || 'https://wbn.araxa.app/webhook/mapa-dna-financeiro'}`);
 });
