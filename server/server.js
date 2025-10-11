@@ -73,6 +73,39 @@ if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'sk-proj-test-
 
 console.log('✅ Servidor configurado com sucesso');
 
+// Função para validar idade mínima
+const validateMinimumAge = (birthDate, minimumAge = 18) => {
+  try {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    
+    // Verificar se a data é válida
+    if (isNaN(birth.getTime())) {
+      return { valid: false, error: 'Data de nascimento inválida' };
+    }
+    
+    // Calcular idade
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    // Ajustar idade se ainda não fez aniversário este ano
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    
+    if (age < minimumAge) {
+      return { 
+        valid: false, 
+        error: `Idade mínima de ${minimumAge} anos é obrigatória. Você tem ${age} anos.` 
+      };
+    }
+    
+    return { valid: true, age: age };
+  } catch (error) {
+    return { valid: false, error: 'Erro ao validar data de nascimento' };
+  }
+};
+
 // Função para calcular numerologia pitagórica
 const calculateNumerology = (name, birthDate) => {
   const pythagoreanTable = {

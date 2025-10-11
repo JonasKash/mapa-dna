@@ -159,7 +159,7 @@ const Step4DataCollection = () => {
               value={birthDate}
               onChange={handleBirthDateChange}
               className="bg-card border-2 border-primary/50 focus:border-primary text-foreground font-mono h-14 text-lg"
-              max="2024-12-31"
+              max="2007-12-31"
               min="1900-01-01"
               required
             />
