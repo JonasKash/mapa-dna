@@ -16,10 +16,36 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({
 }) => {
   const [whatsapp, setWhatsapp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+
+  // Função para validar o telefone
+  const validatePhone = (phoneValue: string): string => {
+    // Remove tudo que não é número
+    const numbers = phoneValue.replace(/\D/g, '');
+    
+    // Verifica se tem pelo menos 9 números
+    if (numbers.length < 9) {
+      return 'Telefone deve ter pelo menos 9 números';
+    }
+    
+    // Verifica se tem no máximo 11 números (DDD + 9 dígitos)
+    if (numbers.length > 11) {
+      return 'Telefone deve ter no máximo 11 números';
+    }
+    
+    return '';
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!whatsapp.trim()) return;
+
+    // Valida o telefone antes de prosseguir
+    const phoneValidationError = validatePhone(whatsapp);
+    if (phoneValidationError) {
+      setPhoneError(phoneValidationError);
+      return;
+    }
 
     setIsLoading(true);
     
@@ -46,6 +72,10 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatWhatsApp(e.target.value);
     setWhatsapp(formatted);
+    
+    // Valida o telefone em tempo real
+    const error = validatePhone(formatted);
+    setPhoneError(error);
   };
 
   if (!isOpen) return null;
@@ -74,13 +104,23 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({
               placeholder="(11) 99999-9999"
               value={whatsapp}
               onChange={handleInputChange}
-              className="w-full"
+              className={`w-full ${
+                phoneError 
+                  ? 'border-red-500 focus:border-red-500' 
+                  : ''
+              }`}
               maxLength={15}
               required
             />
-            <p className="text-xs text-muted-foreground">
-              Digite apenas números, a formatação será feita automaticamente
-            </p>
+            {phoneError ? (
+              <p className="text-red-500 text-sm animate-pulse">
+                ⚠️ {phoneError}
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Digite apenas números, a formatação será feita automaticamente
+              </p>
+            )}
           </div>
 
           <div className="flex gap-3 pt-4">
@@ -96,7 +136,7 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({
             <Button
               type="submit"
               className="flex-1 matrix-glow"
-              disabled={!whatsapp.trim() || isLoading}
+              disabled={!whatsapp.trim() || isLoading || !!phoneError}
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
