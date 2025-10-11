@@ -13,6 +13,55 @@ const Step4DataCollection = () => {
   const [birthDate, setBirthDate] = useState(data.birthDate);
   const [showNotification, setShowNotification] = useState(false);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [nameError, setNameError] = useState('');
+
+  // Função para validar o nome
+  const validateName = (nameValue: string): string => {
+    const trimmedName = nameValue.trim();
+    
+    // Verifica se está vazio
+    if (!trimmedName) {
+      return 'Nome é obrigatório';
+    }
+    
+    // Divide o nome em palavras
+    const words = trimmedName.split(/\s+/).filter(word => word.length > 0);
+    
+    // Verifica se tem pelo menos 2 palavras (nome e sobrenome)
+    if (words.length < 2) {
+      return 'Digite seu nome completo (nome e sobrenome)';
+    }
+    
+    // Verifica se cada palavra tem pelo menos 2 caracteres
+    for (const word of words) {
+      if (word.length < 2) {
+        return 'Cada nome deve ter pelo menos 2 caracteres';
+      }
+    }
+    
+    // Verifica caracteres repetidos excessivos (mais de 3 caracteres iguais seguidos)
+    for (const word of words) {
+      if (/(.)\1{3,}/.test(word)) {
+        return 'Nome contém caracteres repetidos inválidos';
+      }
+    }
+    
+    // Verifica se contém apenas letras, espaços e acentos
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(trimmedName)) {
+      return 'Nome deve conter apenas letras';
+    }
+    
+    return '';
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setName(value);
+    
+    // Valida o nome em tempo real
+    const error = validateName(value);
+    setNameError(error);
+  };
 
   const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -24,6 +73,13 @@ const Step4DataCollection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Valida o nome antes de prosseguir
+    const nameValidationError = validateName(name);
+    if (nameValidationError) {
+      setNameError(nameValidationError);
+      return;
+    }
     
     if (!name || !birthDate) return;
 
@@ -51,7 +107,7 @@ const Step4DataCollection = () => {
     }, 2000);
   };
 
-  const isValid = name.trim() !== '' && birthDate !== '';
+  const isValid = name.trim() !== '' && birthDate !== '' && !nameError;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -78,11 +134,20 @@ const Step4DataCollection = () => {
             <Input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Digite seu nome..."
-              className="bg-card border-2 border-primary/50 focus:border-primary text-foreground font-mono h-14 text-lg terminal-cursor"
+              onChange={handleNameChange}
+              placeholder="Digite seu nome completo..."
+              className={`bg-card border-2 text-foreground font-mono h-14 text-lg terminal-cursor ${
+                nameError 
+                  ? 'border-red-500 focus:border-red-500' 
+                  : 'border-primary/50 focus:border-primary'
+              }`}
               required
             />
+            {nameError && (
+              <p className="text-red-500 text-sm font-orbitron animate-pulse">
+                ⚠️ {nameError}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -118,7 +183,7 @@ const Step4DataCollection = () => {
             disabled={!isValid}
             className="w-full text-lg font-orbitron bg-primary hover:bg-primary/80 text-primary-foreground border-2 border-primary shadow-lg hover:shadow-xl transition-all animate-pulse-glow disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isValid ? '🚀 Desbloquear DNA Financeiro' : '⚠️ Preencha todos os campos'}
+            {isValid ? '🚀 Desbloquear DNA Financeiro' : nameError ? '⚠️ Nome inválido' : '⚠️ Preencha todos os campos'}
           </Button>
         </form>
 
