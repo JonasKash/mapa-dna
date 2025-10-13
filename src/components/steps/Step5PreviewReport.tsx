@@ -228,7 +228,7 @@ const Step5PreviewReport = () => {
           <div className="space-y-2 text-sm text-foreground">
             <p className="font-bold text-center text-lg">🚀 NO RELATÓRIO COMPLETO, você terá acesso a:</p>
             <ul className="space-y-1 text-xs">
-              <li>✅ O Mapa que vai te levar direto aos seus PRIMEIROS R$ 10.000 — sem enrolação!</li>
+              <li>✅ O Mapa que vai te levar direto aos seus PRIMEIROS <span style={{ color: '#B28C36' }}>R$ 10.000</span> — sem enrolação!</li>
               <li>✅ Estratégias PERIGOSAMENTE EFICAZES que vão te DESPRENDER da CLT em apenas 6 meses!</li>
               <li>✅ Métodos INFALÍVEIS para multiplicar sua Renda — você vai ver seu dinheiro SE DUPLICAR!</li>
               <li>✅ Como EXPLODIR todos os bloqueios que te mantêm na MISÉRIA e fazer sua vida prosperar como nunca!</li>
@@ -249,7 +249,7 @@ const Step5PreviewReport = () => {
 
           <div className="flex items-center justify-center gap-3">
             <span className="text-2xl line-through text-muted-foreground">R$ 49,90</span>
-            <span className="text-5xl font-orbitron text-primary matrix-glow">R$ 10,00</span>
+            <span className="text-5xl font-orbitron matrix-glow" style={{ color: '#B28C36' }}>R$ 10,00</span>
           </div>
 
           <Button
@@ -282,8 +282,32 @@ const Step5PreviewReport = () => {
             <p className="text-sm text-muted-foreground">
               A hora de mudar sua vida financeira é HOJE! Clique e descubra seu verdadeiro potencial!
             </p>
+            <div className="bg-gradient-to-r from-secondary/10 via-primary/10 to-secondary/10 border-2 border-secondary rounded-lg p-4 space-y-3">
+              <div className="text-center">
+                <p className="text-sm font-orbitron text-secondary">
+                  🔒 SEU DINHEIRO ESTÁ EM CATIVEIRO!
+                </p>
+              </div>
+              <div className="space-y-2 text-xs text-foreground">
+                <p className="text-center">
+                  Durante sua jornada, você possui um potencial financeiro de <span className="font-orbitron" style={{ color: '#B28C36' }}>R$ {data.money}</span> esperando para ser LIBERTADO!
+                </p>
+                <p className="text-center text-muted-foreground">
+                  ⚠️ MAS ATENÇÃO! Esse dinheiro está BLOQUEADO — refém da sua falta de conhecimento sobre como usar sua numerologia a seu favor no dia a dia.
+                </p>
+                <p className="text-center font-orbitron text-secondary">
+                  💡 A VERDADE É SIMPLES: você só conseguirá desbloquear sua fortuna quando dominar as estratégias poderosas do uso da numerologia ao seu favor!
+                </p>
+                <p className="text-center text-muted-foreground">
+                  📈 NÃO PERCA TEMPO! Cada dia que passa, esse valor fica mais distante de suas mãos. É hora de agir e deixar de ser refém do potencial não realizado!
+                </p>
+                <p className="text-center font-orbitron text-secondary">
+                  🔑 Aprenda a canalizar sua numerologia e veja seu dinheiro FLUIR como nunca antes!
+                </p>
+              </div>
+            </div>
             <p className="text-xs text-muted-foreground">
-              💎 Dinheiro Acumulado: <span className="text-primary font-orbitron">R$ {data.money}</span>
+              💎 Dinheiro Acumulado: <span className="font-orbitron" style={{ color: '#B28C36' }}>R$ {data.money}</span>
             </p>
           </div>
         )}

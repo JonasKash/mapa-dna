@@ -77,7 +77,7 @@ const Step2Question1 = () => {
                     {option.id}
                   </span>
                   <span className="px-3 py-1 bg-secondary/20 border border-secondary rounded-full text-xs font-orbitron text-secondary">
-                    +R$ {option.money}
+                    <span style={{ color: '#B28C36' }}>+R$ {option.money}</span>
                   </span>
                 </div>
                 
@@ -91,7 +91,7 @@ const Step2Question1 = () => {
                 {/* Notification area dentro do button */}
                 {selected === option.id && (
                   <div className="w-full pt-3 border-t border-primary/30 animate-slide-down">
-                    <p className="text-xs text-primary matrix-glow">
+                    <p className="text-xs matrix-glow" style={{ color: '#B28C36' }}>
                       ✓ +R$ {option.money} adicionados
                     </p>
                   </div>

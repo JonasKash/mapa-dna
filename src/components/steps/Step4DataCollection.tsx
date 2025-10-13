@@ -171,7 +171,7 @@ const Step4DataCollection = () => {
               <div>
                 <p className="text-sm font-orbitron text-secondary">Bônus de Desbloqueio</p>
                 <p className="text-xs text-muted-foreground">
-                  +R$ 1.000 ao completar esta etapa
+                  <span style={{ color: '#B28C36' }}>+R$ 1.000</span> ao completar esta etapa
                 </p>
               </div>
             </div>

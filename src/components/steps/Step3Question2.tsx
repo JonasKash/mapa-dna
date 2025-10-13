@@ -45,7 +45,7 @@ const Step3Question2 = () => {
             <span className="inline-block px-4 py-2 bg-accent/20 border border-accent rounded-lg text-accent text-xs font-orbitron neon-purple-glow">
               QUESTÃO 2/2
             </span>
-            <span className="inline-block px-4 py-2 bg-secondary/20 border border-secondary rounded-lg text-secondary text-xs font-orbitron cyber-glow">
+            <span className="inline-block px-4 py-2 bg-secondary/20 border border-secondary rounded-lg text-xs font-orbitron cyber-glow" style={{ color: '#B28C36' }}>
               R$ {data.money}
             </span>
           </div>
@@ -87,7 +87,7 @@ const Step3Question2 = () => {
 
               {selected === option.id && (
                 <div className="w-full pt-2 border-t border-primary/30 animate-slide-down">
-                  <p className="text-xs text-primary matrix-glow">
+                  <p className="text-xs matrix-glow" style={{ color: '#B28C36' }}>
                     ✓ +R$ {option.money} adicionados
                   </p>
                 </div>

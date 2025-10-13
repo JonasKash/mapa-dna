@@ -19,7 +19,7 @@ const ProgressBar = () => {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-orbitron text-secondary">
-              💰 R$ {data.money}
+              💰 <span style={{ color: '#B28C36' }}>R$ {data.money}</span>
             </span>
           </div>
         </div>

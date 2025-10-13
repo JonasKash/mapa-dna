@@ -29,7 +29,7 @@ const Step1Welcome = () => {
       <div className="max-w-3xl w-full space-y-8 animate-fade-in-up">
         <div className="text-center space-y-6">
           <div className="inline-block px-4 py-2 bg-primary/20 border border-primary rounded-lg matrix-glow">
-            <p className="text-xs font-mono text-primary terminal-cursor">
+            <p className="text-xs font-mono terminal-cursor" style={{ color: '#B28C36' }}>
               {typedText}
             </p>
           </div>

@@ -63,7 +63,7 @@ const Step7Upsell = () => {
                   <p className="text-sm text-muted-foreground">Apenas 15 vagas este mês</p>
                   <div className="flex items-center justify-center gap-3">
                     <span className="text-2xl line-through text-muted-foreground">R$ 497</span>
-                    <span className="text-5xl font-orbitron text-primary matrix-glow">R$ 150</span>
+                    <span className="text-5xl font-orbitron matrix-glow" style={{ color: '#B28C36' }}>R$ 150</span>
                   </div>
                   <p className="text-xs text-accent">🔥 Desconto exclusivo para membros nível {data.money}+</p>
                 </div>

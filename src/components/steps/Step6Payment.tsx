@@ -47,7 +47,7 @@ const Step6Payment = () => {
           </h2>
           
           <div className="inline-block">
-            <p className="text-5xl font-orbitron text-primary matrix-glow">R$ 10,00</p>
+            <p className="text-5xl font-orbitron matrix-glow" style={{ color: '#B28C36' }}>R$ 10,00</p>
             <p className="text-sm text-muted-foreground">Pagamento único via PIX</p>
           </div>
         </div>
