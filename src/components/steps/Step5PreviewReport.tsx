@@ -249,7 +249,7 @@ const Step5PreviewReport = () => {
 
           <div className="flex items-center justify-center gap-3">
             <span className="text-2xl line-through text-muted-foreground">R$ 49,90</span>
-            <span className="text-5xl font-orbitron matrix-glow" style={{ color: '#B28C36' }}>R$ 10,00</span>
+            <span className="text-5xl font-orbitron matrix-glow" style={{ color: '#B28C36' }}>R$ 19,99</span>
           </div>
 
           <Button

@@ -9,7 +9,7 @@ const Step6Payment = () => {
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  const pixCode = '00020126430014BR.GOV.BCB.PIX0121agenciavonk@gmail.com520400005303986540510.005802BR5901N6001C62210517MapaDnaFinanceiro63045131';
+  const pixCode = '00020126430014BR.GOV.BCB.PIX0121agenciavonk@gmail.com520400005303986540519.995802BR5901N6001C62210517MapaDnaFinanceiro63042A70';
   const whatsappLink = 'https://wa.me/5534997101300?text=Ol%C3%A1%20fiz%20a%20compra%20do%20relat%C3%B3rio.%20';
 
   const handleCopy = () => {
@@ -47,7 +47,7 @@ const Step6Payment = () => {
           </h2>
           
           <div className="inline-block">
-            <p className="text-5xl font-orbitron matrix-glow" style={{ color: '#B28C36' }}>R$ 10,00</p>
+            <p className="text-5xl font-orbitron matrix-glow" style={{ color: '#B28C36' }}>R$ 19,99</p>
             <p className="text-sm text-muted-foreground">Pagamento único via PIX</p>
           </div>
         </div>
