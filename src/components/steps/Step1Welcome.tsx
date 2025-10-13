@@ -81,7 +81,7 @@ const Step1Welcome = () => {
               className="text-center p-3 bg-card/30 rounded-lg border border-primary/30"
               style={{ animationDelay: `${i * 0.2}s` }}
             >
-              <p className="text-xs text-primary font-orbitron">✓ {feature}</p>
+              <p className="text-xs font-orbitron" style={{ color: '#1c31a5' }}>✓ {feature}</p>
             </div>
           ))}
         </div>
