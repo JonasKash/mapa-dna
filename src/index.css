@@ -4,54 +4,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tech Premium Theme Design System - Blue & Gold - All colors MUST be HSL */
+/* Matrix Hacker Theme Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    /* Tech Premium Theme Colors - Blue & Gold */
-    --background: 220 100% 3%;
-    --foreground: 220 20% 85%;
+    /* Matrix Theme Colors - Softer Green */
+    --background: 120 20% 8%;
+    --foreground: 120 60% 65%;
     
-    --card: 220 50% 8%;
-    --card-foreground: 220 20% 85%;
+    --card: 120 15% 12%;
+    --card-foreground: 120 60% 65%;
     
-    --popover: 220 50% 8%;
-    --popover-foreground: 220 20% 85%;
+    --popover: 120 15% 12%;
+    --popover-foreground: 120 60% 65%;
     
-    --primary: 230 78% 25%;
-    --primary-foreground: 45 100% 95%;
+    --primary: 120 60% 55%;
+    --primary-foreground: 120 20% 8%;
     
-    --secondary: 45 100% 45%;
-    --secondary-foreground: 220 100% 3%;
+    --secondary: 180 50% 60%;
+    --secondary-foreground: 120 20% 8%;
     
-    --muted: 220 30% 15%;
-    --muted-foreground: 220 15% 60%;
+    --muted: 120 20% 20%;
+    --muted-foreground: 120 30% 50%;
     
-    --accent: 45 100% 45%;
-    --accent-foreground: 220 100% 3%;
+    --accent: 280 60% 65%;
+    --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 50% 25%;
-    --input: 220 30% 12%;
-    --ring: 230 78% 25%;
+    --border: 120 40% 35%;
+    --input: 120 20% 15%;
+    --ring: 120 60% 55%;
     
     --radius: 0.5rem;
     
-    /* Custom Tech Premium Variables */
-    --matrix-glow: 230 78% 25%;
-    --matrix-dark: 220 100% 3%;
-    --cyber-cyan: 45 100% 45%;
-    --neon-purple: 45 100% 45%;
+    /* Custom Matrix Variables */
+    --matrix-glow: 120 60% 55%;
+    --matrix-dark: 120 20% 8%;
+    --cyber-cyan: 180 50% 60%;
+    --neon-purple: 280 60% 65%;
     
     /* Gradients */
-    --gradient-matrix: linear-gradient(135deg, hsl(230 78% 25% / 0.1), hsl(45 100% 45% / 0.1));
-    --gradient-glow: linear-gradient(90deg, transparent, hsl(230 78% 25% / 0.2), transparent);
+    --gradient-matrix: linear-gradient(135deg, hsl(120 60% 55% / 0.1), hsl(120 50% 40% / 0.1));
+    --gradient-glow: linear-gradient(90deg, transparent, hsl(120 60% 55% / 0.2), transparent);
     
     /* Shadows */
-    --shadow-neon: 0 0 15px hsl(230 78% 25% / 0.3);
-    --shadow-glow: 0 0 30px hsl(230 78% 25% / 0.2);
+    --shadow-neon: 0 0 15px hsl(120 60% 55% / 0.3);
+    --shadow-glow: 0 0 30px hsl(120 60% 55% / 0.2);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
