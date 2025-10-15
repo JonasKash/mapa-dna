@@ -11,12 +11,7 @@ interface FunnelData {
   name: string;
   birthDate: string;
   whatsapp: string;
-  question1: string;
-  question2: string;
-  money: number;
   currentStep: number;
-  achievements: string[];
-  monthlyPotential: number;
 }
 
 // URL do backend - configurável via variável de ambiente ou padrão local
@@ -159,7 +154,7 @@ const generateArtificialResponse = (data: FunnelData): OracleResponse => {
     "Aposentadoria": "Construção de patrimônio de longo prazo com foco em segurança"
   };
 
-  const strategy = responses[data.question1] || "Desenvolvimento de habilidades de alto valor e criação de múltiplas fontes de renda";
+  const strategy = "Desenvolvimento de habilidades de alto valor e criação de múltiplas fontes de renda";
 
   return {
     revelacao: `${data.name}, sua essência única vibra no número ${randomNumber}, despertando o ${archetype.name} que habita em você.`,

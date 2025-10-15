@@ -16,12 +16,7 @@ export interface FunnelData {
   name: string;
   birthDate: string;
   whatsapp: string;
-  question1: string;
-  question2: string;
-  money: number;
   currentStep: number;
-  achievements: string[];
-  monthlyPotential: number;
   oracleData?: OracleData;
   isGeneratingOracle: boolean;
 }
@@ -29,12 +24,9 @@ export interface FunnelData {
 interface FunnelContextType {
   data: FunnelData;
   updateData: (updates: Partial<FunnelData>) => void;
-  addMoney: (money: number) => void;
-  addAchievement: (achievement: string) => void;
   nextStep: () => void;
   previousStep: () => void;
   resetFunnel: () => void;
-  calculateMonthlyPotential: () => number;
   sendWebhook: (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated') => Promise<boolean>;
   sendWebhookWithData: (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated', customData?: Partial<FunnelData>) => Promise<boolean>;
   generateOracle: () => Promise<void>;
@@ -44,12 +36,7 @@ const initialData: FunnelData = {
   name: '',
   birthDate: '',
   whatsapp: '',
-  question1: '',
-  question2: '',
-  money: 100, // Starting bonus em dinheiro
   currentStep: 1,
-  achievements: ['Jornada Iniciada'],
-  monthlyPotential: 0,
   oracleData: undefined,
   isGeneratingOracle: false,
 };
@@ -66,16 +53,6 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     setData((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  const addMoney = useCallback((money: number) => {
-    setData((prev) => ({ ...prev, money: prev.money + money }));
-  }, []);
-
-  const addAchievement = useCallback((achievement: string) => {
-    setData((prev) => ({
-      ...prev,
-      achievements: [...prev.achievements, achievement],
-    }));
-  }, []);
 
   const nextStep = useCallback(() => {
     setData((prev) => ({ ...prev, currentStep: prev.currentStep + 1 }));
@@ -89,22 +66,6 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
     setData(initialData);
   }, []);
 
-  const calculateMonthlyPotential = useCallback(() => {
-    // Base mínimo de R$ 1.800
-    const baseAmount = 1800;
-    
-    // Multiplicador baseado no dinheiro acumulado
-    const moneyMultiplier = data.money / 100; // Cada R$ 100 = 1x multiplicador
-    
-    // Bônus por conquistas
-    const achievementBonus = data.achievements.length * 200;
-    
-    // Cálculo final: base + (dinheiro * multiplicador) + bônus de conquistas
-    const monthlyPotential = Math.round(baseAmount + (data.money * moneyMultiplier) + achievementBonus);
-    
-    // Garantir que seja pelo menos R$ 1.800
-    return Math.max(monthlyPotential, 1800);
-  }, [data.money, data.achievements]);
 
   const sendWebhook = useCallback(async (eventType: 'payment_click' | 'quiz_complete' | 'data_collected' | 'oracle_generated'): Promise<boolean> => {
     const timestamp = new Date().toISOString();
@@ -140,11 +101,6 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
           name: mergedData.name,
           birth_date: mergedData.birthDate,
           whatsapp: mergedData.whatsapp || '',
-          question1: mergedData.question1,
-          question2: mergedData.question2,
-          money: mergedData.money,
-          monthly_potential: mergedData.monthlyPotential,
-          achievements: mergedData.achievements,
           current_step: mergedData.currentStep,
           oracle_data: mergedData.oracleData,
           tracking_data: trackingData
@@ -237,12 +193,9 @@ export const FunnelProvider = ({ children }: { children: ReactNode }) => {
       value={{
         data,
         updateData,
-        addMoney,
-        addAchievement,
         nextStep,
         previousStep,
         resetFunnel,
-        calculateMonthlyPotential,
         sendWebhook,
         sendWebhookWithData,
         generateOracle,

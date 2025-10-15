@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFunnel } from '@/contexts/FunnelContext';
 import { useSound } from '@/hooks/useSound';
 import { Button } from '@/components/ui/button';
@@ -7,13 +7,18 @@ import NotificationBadge from '@/components/NotificationBadge';
 import { WhatsAppModal } from '@/components/WhatsAppModal';
 
 const Step4DataCollection = () => {
-  const { data, updateData, addMoney, addAchievement, nextStep } = useFunnel();
+  const { data, updateData, nextStep } = useFunnel();
   const { playAchievement } = useSound();
   const [name, setName] = useState(data.name);
   const [birthDate, setBirthDate] = useState(data.birthDate);
   const [showNotification, setShowNotification] = useState(false);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
   const [nameError, setNameError] = useState('');
+
+  // Scroll para o topo quando o componente for montado
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   // Função para validar o nome
   const validateName = (nameValue: string): string => {
@@ -93,8 +98,6 @@ const Step4DataCollection = () => {
   const handleWhatsAppConfirm = (whatsapp: string) => {
     // Update data with WhatsApp
     updateData({ whatsapp });
-    addMoney(1000);
-    addAchievement('DNA Financeiro Desbloqueado');
     playAchievement();
     
     setShowNotification(true);
@@ -169,9 +172,9 @@ const Step4DataCollection = () => {
             <div className="flex items-center gap-3">
               <span className="text-3xl">🔐</span>
               <div>
-                <p className="text-sm font-orbitron text-secondary">Bônus de Desbloqueio</p>
+                <p className="text-sm font-orbitron text-secondary">Acesso Liberado</p>
                 <p className="text-xs text-muted-foreground">
-                  <span style={{ color: '#B28C36' }}>+R$ 1.000</span> ao completar esta etapa
+                  Relatório gratuito da sua numerologia financeira
                 </p>
               </div>
             </div>
@@ -200,7 +203,7 @@ const Step4DataCollection = () => {
       </div>
 
       <NotificationBadge
-        message="DNA Financeiro Desbloqueado"
+        message="Acesso Liberado"
         show={showNotification}
         onClose={() => setShowNotification(false)}
       />

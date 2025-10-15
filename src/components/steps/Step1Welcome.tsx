@@ -10,6 +10,9 @@ const Step1Welcome = () => {
   const fullText = 'Inicializando Sistema de DNA Financeiro...';
 
   useEffect(() => {
+    // Scroll para o topo quando o componente for montado
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     playAchievement();
     let currentIndex = 0;
     const interval = setInterval(() => {
@@ -81,7 +84,7 @@ const Step1Welcome = () => {
               className="text-center p-3 bg-card/30 rounded-lg border border-primary/30"
               style={{ animationDelay: `${i * 0.2}s` }}
             >
-              <p className="text-xs font-orbitron" style={{ color: '#1c31a5' }}>✓ {feature}</p>
+              <p className="text-xs font-orbitron" style={{ color: '#22c55e' }}>✓ {feature}</p>
             </div>
           ))}
         </div>

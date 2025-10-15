@@ -3,7 +3,7 @@ import { useFunnel } from '@/contexts/FunnelContext';
 import { Button } from '@/components/ui/button';
 
 const Step5PreviewReport = () => {
-  const { data, nextStep, calculateMonthlyPotential, generateOracle, sendWebhookWithData } = useFunnel();
+  const { data, nextStep, generateOracle, sendWebhookWithData } = useFunnel();
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
 
   // Função para dividir o texto da revelação em seções
@@ -12,7 +12,7 @@ const Step5PreviewReport = () => {
     return {
       abertura: text,
       nucleo: `Como ${data.oracleData?.arquetipo}, você carrega a energia de ${data.oracleData?.essencia}.`,
-      caminho: `Estratégia baseada em suas respostas: "${data.question1}" e "${data.question2}".`,
+      caminho: `Estratégia baseada na sua numerologia pessoal e data de nascimento.`,
       potencial: `30 dias: +40% na renda | 90 dias: +120% na renda | 180 dias: +300% na renda`,
       encerramento: `${data.name}, o número ${data.oracleData?.numero_final} confirma: sua transformação financeira já começou.`
     };
@@ -51,11 +51,10 @@ const Step5PreviewReport = () => {
       // Enviar webhook com todos os dados do formulário
       console.log('📋 Dados completos antes do webhook:', data);
       sendWebhookWithData('oracle_generated', {
-        oracleData: data.oracleData,
-        monthlyPotential: calculateMonthlyPotential()
+        oracleData: data.oracleData
       });
     }
-  }, [data.oracleData, data.isGeneratingOracle, sendWebhookWithData, calculateMonthlyPotential]);
+  }, [data.oracleData, data.isGeneratingOracle, sendWebhookWithData]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -71,7 +70,6 @@ const Step5PreviewReport = () => {
   };
 
   const lifePath = calculateLifePath(data.birthDate);
-  const monthlyPotential = calculateMonthlyPotential();
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 py-12">
@@ -285,30 +283,27 @@ const Step5PreviewReport = () => {
             <div className="bg-gradient-to-r from-secondary/10 via-primary/10 to-secondary/10 border-2 border-secondary rounded-lg p-4 space-y-3">
               <div className="text-center">
                 <p className="text-sm font-orbitron text-secondary">
-                  🔒 SEU DINHEIRO ESTÁ EM CATIVEIRO!
+                  🔒 SEU POTENCIAL ESTÁ AGUARDANDO!
                 </p>
               </div>
               <div className="space-y-2 text-xs text-foreground">
                 <p className="text-center">
-                  Durante sua jornada, você possui um potencial financeiro de <span className="font-orbitron" style={{ color: '#B28C36' }}>R$ {data.money}</span> esperando para ser LIBERTADO!
+                  Sua numerologia revela um potencial financeiro único esperando para ser LIBERTADO!
                 </p>
                 <p className="text-center text-muted-foreground">
-                  ⚠️ MAS ATENÇÃO! Esse dinheiro está BLOQUEADO — refém da sua falta de conhecimento sobre como usar sua numerologia a seu favor no dia a dia.
+                  ⚠️ MAS ATENÇÃO! Esse potencial está BLOQUEADO — refém da sua falta de conhecimento sobre como usar sua numerologia a seu favor no dia a dia.
                 </p>
                 <p className="text-center font-orbitron text-secondary">
                   💡 A VERDADE É SIMPLES: você só conseguirá desbloquear sua fortuna quando dominar as estratégias poderosas do uso da numerologia ao seu favor!
                 </p>
                 <p className="text-center text-muted-foreground">
-                  📈 NÃO PERCA TEMPO! Cada dia que passa, esse valor fica mais distante de suas mãos. É hora de agir e deixar de ser refém do potencial não realizado!
+                  📈 NÃO PERCA TEMPO! Cada dia que passa, esse potencial fica mais distante de suas mãos. É hora de agir e deixar de ser refém do potencial não realizado!
                 </p>
                 <p className="text-center font-orbitron text-secondary">
                   🔑 Aprenda a canalizar sua numerologia e veja seu dinheiro FLUIR como nunca antes!
                 </p>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              💎 Dinheiro Acumulado: <span className="font-orbitron" style={{ color: '#B28C36' }}>R$ {data.money}</span>
-            </p>
           </div>
         )}
       </div>
