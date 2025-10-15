@@ -200,10 +200,10 @@ const Step6Payment = () => {
           {/* Full Report Benefits */}
           <div className="space-y-4">
             <ul className="space-y-3 text-base text-foreground">
-              <li>🔮 As datas exatas em que o dinheiro tende a fluir com mais força — quando assinar contratos, investir, lançar projetos ou até pedir um aumento faz diferença real no resultado. E também os períodos em que é melhor recuar e planejar, evitando perdas e decisões impulsivas.</li>
-              <li>💫 Os ciclos ocultos da sua prosperidade, que explicam por que em certos meses tudo dá certo — clientes aparecem, oportunidades surgem — e de repente, sem aviso, tudo trava. O relatório mostra como antecipar esses altos e baixos e manter o equilíbrio.</li>
-              <li>💎 Seus números de poder pessoais, que influenciam o tipo de dinheiro que você atrai: uns trazem ganhos rápidos, outros estabilidade, outros multiplicação. Saber quais são muda completamente a forma como você age e decide.</li>
-              <li>🚀 As estratégias práticas de prosperidade, personalizadas pra sua vibração: desde rituais de foco e rotina energética, até ajustes comportamentais e decisões financeiras conscientes, pra transformar seu potencial vibracional em renda real, concreta e crescente.</li>
+              <li>🔮 As datas exatas em que o dinheiro tende a fluir com mais força — <strong>quando assinar contratos, investir, lançar projetos ou até pedir um aumento faz diferença real no resultado</strong>. E também os períodos em que é melhor recuar e planejar, evitando perdas e decisões impulsivas.</li>
+              <li>💫 Os ciclos ocultos da sua prosperidade, que explicam por que em certos meses tudo dá certo — <strong>clientes aparecem, oportunidades surgem — e de repente, sem aviso, tudo trava</strong>.</li>
+              <li>💎 <strong>Seus números de poder pessoais, que influenciam o tipo de dinheiro que você atrai:</strong> uns trazem ganhos rápidos, outros estabilidade, outros multiplicação. Saber quais são muda completamente o jogo.</li>
+              <li>🚀 <strong>As estratégias práticas de prosperidade, personalizadas pra sua vibração:</strong> desde rituais de foco e rotina energética, até ajustes comportamentais e decisões financeiras conscientes, pra transformar seu potencial vibracional em renda real, concreta e crescente.</li>
             </ul>
             <p className="text-base text-foreground leading-relaxed mt-4">
               Não é adivinhação. É leitura vibracional aplicada à prosperidade.
@@ -226,14 +226,14 @@ const Step6Payment = () => {
               <ul className="space-y-2 text-base text-foreground">
                 <li>📲 Entrega imediata no WhatsApp</li>
                 <li>🔓 Acesso ao seu Mapa Financeiro Completo</li>
-                <li>💸 Rotina de Frequência da Atração</li>
+                <li>💸 Rotina de Alta Frequência para Atração</li>
                 <li>Valor simbólico de ativação: <span className="font-orbitron text-2xl" style={{ color: '#B28C36' }}>R$ 19,99</span></li>
               </ul>
             </div>
+          </div>
 
-
-            {/* QR Code and PIX */}
-            <div className="space-y-6">
+          {/* QR Code and PIX - Outside the payment section */}
+          <div className="space-y-6">
               <div className="text-center">
                 <p className="text-sm font-orbitron text-primary mb-4">✨ Para liberar, realize o pagamento via PIX abaixo e ative o código do seu mapa:</p>
                 
@@ -304,20 +304,19 @@ const Step6Payment = () => {
               </div>
             </div>
           </div>
-        </div>
 
-            {/* Security Notice */}
-            <div className="bg-muted/30 border border-primary/30 rounded-lg p-4 space-y-2">
-              <div className="flex items-center gap-2 justify-center">
-                <span className="text-primary text-xl">🔐</span>
-                <p className="text-sm text-muted-foreground font-orbitron">
-                  Pagamento 100% Seguro
-                </p>
-              </div>
-              <p className="text-xs text-center text-muted-foreground">
-                Após a confirmação, você receberá acesso imediato ao relatório completo
+          {/* Security Notice */}
+          <div className="bg-muted/30 border border-primary/30 rounded-lg p-4 space-y-2">
+            <div className="flex items-center gap-2 justify-center">
+              <span className="text-primary text-xl">🔐</span>
+              <p className="text-sm text-muted-foreground font-orbitron">
+                Pagamento 100% Seguro
               </p>
             </div>
+            <p className="text-xs text-center text-muted-foreground">
+              Após a confirmação, você receberá acesso imediato ao relatório completo
+            </p>
+          </div>
           </>
         )}
       </div>
